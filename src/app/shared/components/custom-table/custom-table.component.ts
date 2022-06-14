@@ -51,8 +51,6 @@ export class CustomTableComponent implements OnInit {
   rowsPerPageOptions = [10, 20, 30, 50, 100]
 
   ngOnInit(): void {
-    this.rowsPerPageOptions = [10, 20, 30, 50, 100, this.config.total];
-
     this.pageInfo = {
       startIndex: this.first / this.rows, pageSize: this.rows
     };

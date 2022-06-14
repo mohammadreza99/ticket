@@ -16,11 +16,10 @@ export class OperatorPage implements OnInit {
   }
 
   ngOnInit() {
-    this.loadData({ page_number: 1, page_limit: 10 });
+    this.loadData({ page_number: 1, page_limit: 30 });
   }
 
   operators: Operator[];
-  allOperators: Operator[];
   config: TableConfig = {
     colDef: [
       {
@@ -40,7 +39,7 @@ export class OperatorPage implements OnInit {
         templateString: (res) => {
           let ips = ''
           for (const item of res.allowed_ips) {
-            ips += `<span class="chips">${item}</span>`;
+            ips += `<span class="chips"> ${item} </span>`;
           }
           return ips;
         }
@@ -181,10 +180,11 @@ export class OperatorPage implements OnInit {
     const operators = (await this.operatorService.getOperators({
       page_number: 1,
       page_limit: this.config.total,
-    }).toPromise()).data;
+    }).toPromise()).data.operators;
     let dialogFormConfig: NgDialogFormConfig[] = [
       {
         type: 'multi-select',
+        display: 'chip',
         formControlName: 'target_operator_ids',
         label: 'انتقال به سایر اوپراتور ها',
         labelPos: 'fix-top',
@@ -192,7 +192,6 @@ export class OperatorPage implements OnInit {
         labelWidth: 200,
         optionValue: 'operator_id',
         optionLabel: 'username',
-        display: 'chip',
         options: operators,
         value: []
       },
