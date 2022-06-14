@@ -13,7 +13,7 @@ export class OperatorService extends ApiService {
     super();
   }
 
-  getOperators(data: FilterConfig): Observable<any[]> {
+  getOperators(data: FilterConfig): Observable<any> {
     return this._post(``,
       {
         method: 'getOperators',
@@ -22,7 +22,7 @@ export class OperatorService extends ApiService {
     )
   }
 
-  addOperator(data: Operator): Observable<any[]> {
+  addOperator(data: Operator): Observable<any> {
     return this._post(``,
       {
         method: 'addOperator',
@@ -31,7 +31,7 @@ export class OperatorService extends ApiService {
     );
   }
 
-  editOperator(data: Operator): Observable<any[]> {
+  editOperator(data: Operator): Observable<any> {
     return this._post(``,
       {
         method: 'editOperator',
@@ -40,7 +40,7 @@ export class OperatorService extends ApiService {
     );
   }
 
-  transferOperatorTickets(data: TransferOperatorTickets): Observable<any[]> {
+  transferOperatorTickets(data: TransferOperatorTickets): Observable<any> {
     return this._post(``,
       {
         method: 'transferOperatorTickets',

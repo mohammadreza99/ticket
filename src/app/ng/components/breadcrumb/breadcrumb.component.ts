@@ -14,7 +14,7 @@ class NgBreadcrumbItem {
 })
 export class BreadcrumbComponent implements OnInit {
 
-  breadcrumbs$: Observable<any[]>;
+  breadcrumbs$: Observable<any>;
 
   constructor(private readonly breadcrumbService: BreadcrumbService) {
     this.breadcrumbs$ = breadcrumbService.breadcrumbs$;

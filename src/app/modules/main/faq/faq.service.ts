@@ -14,7 +14,7 @@ export class FAQService extends ApiService {
     super();
   }
 
-  getFAQs(filter: FilterConfig, category_id: number): Observable<any[]> {
+  getFAQs(filter: FilterConfig, category_id: number): Observable<any> {
     return this._post(``,
       {
         method: 'getFAQs',
@@ -23,7 +23,7 @@ export class FAQService extends ApiService {
     );
   }
 
-  addFAQ(data: FAQ): Observable<any[]> {
+  addFAQ(data: FAQ): Observable<any> {
     return this._post(``,
       {
         method: 'addFAQ',
@@ -32,7 +32,7 @@ export class FAQService extends ApiService {
     );
   }
 
-  editFAQ(data: FAQ): Observable<any[]> {
+  editFAQ(data: FAQ): Observable<any> {
     return this._post(``,
       {
         method: 'editFAQ',
@@ -41,7 +41,7 @@ export class FAQService extends ApiService {
     );
   }
 
-  removeFAQ(faq_id: number): Observable<any[]> {
+  removeFAQ(faq_id: number): Observable<any> {
     return this._post(``,
       {
         method: 'removeFAQ',
