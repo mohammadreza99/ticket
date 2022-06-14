@@ -1,0 +1,170 @@
+@import "mixins";
+
+:host ::ng-deep {
+  nav {
+    flex-direction: column;
+    background-color: #fff;
+    transition: all 200ms;
+    // box-shadow: none!important;
+    // border-bottom: 1px solid #eff2f5;
+    padding: 0;
+    .nav-item {
+      display: flex;
+      align-items: center;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    .secondary-navbar{
+      border-top: 1px solid #eff2f5;
+    }
+  }
+
+  .panelMenuIcons {
+    top: 99px;
+    right: 7px !important;
+    z-index: 1102;
+
+    div {
+      color: #62659b;
+      background-color: #1a1a27;
+      padding: 1.16rem 2.1rem 1.1rem 10px;
+    }
+  }
+
+  p-sidebar {
+    .sidebarToggleIcon {
+      transition: all 300ms;
+    }
+
+    .active-menu {
+      .p-panelmenu-panel .p-highlight a {
+        color: azure !important;
+      }
+    }
+
+    .p-sidebar {
+      background-color: #1a1a27;
+
+      .p-sidebar-header {
+        padding: 0;
+      }
+
+      .p-sidebar-content {
+        padding: 0;
+      }
+
+      .section-top {
+        background-color: #1e1e2d;
+        padding: 1.25rem;
+
+        i {
+          cursor: pointer;
+
+          &:hover {
+            opacity: .7;
+          }
+        }
+      }
+
+
+      .p-panelmenu {
+        padding: 0 1.25rem;
+
+        &-content {
+          background-color: transparent !important;
+          border-color: transparent;
+          direction: rtl;
+          padding-right: 10px;
+        }
+
+        &-icon {
+          position: absolute;
+          transform: rotateY(180deg);
+          left: 10px;
+        }
+
+        .p-panelmenu-header-link {
+          background-color: #1a1a27;
+          justify-content: flex-end;
+          color: #62659b;
+          border: 0;
+          transition: all .2s;
+          border-radius: 8px !important;
+
+
+          .p-menuitem-icon {
+            position: absolute;
+          }
+
+          .p-menuitem-text {
+            margin-right: 30px;
+          }
+
+          &:hover {
+            color: azure;
+            background-color: #1a1a27;
+          }
+
+          &:focus {
+            box-shadow: none;
+          }
+        }
+
+        .p-menuitem-link-active {
+          color: azure !important;
+
+          span {
+            color: azure !important;
+
+          }
+        }
+
+        p-panelmenusub ul li a {
+          span {
+            margin-right: 5px !important;
+            color: #62659b !important;
+          }
+
+          &:focus {
+            box-shadow: none !important;
+          }
+
+          &:hover {
+            span {
+              color: azure !important;
+            }
+
+            background-color: #1a1a27 !important;
+          }
+        }
+      }
+    }
+
+    &[ng-reflect-position="left"] {
+      .p-panelmenu {
+        &-header-link {
+          .p-panelmenu-icon {
+            margin-left: 0;
+            margin-right: 0.5rem;
+          }
+        }
+
+        .p-menuitem-icon {
+          margin-left: 0;
+          margin-right: 0.5em;
+        }
+      }
+    }
+  }
+}
+
+// .p-menuitem-link {
+//   color: #62659b !important;
+
+//   &:hover {
+//     color: azure;
+//     background-color: #1a1a27;
+//   }
+// }

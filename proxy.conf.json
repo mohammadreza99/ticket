@@ -1,0 +1,11 @@
+{
+  "/api": {
+    "target": "https://supportbotdashboard.iranlms.ir",
+    "secure": false,
+    "pathRewrite": {
+      "^/api": ""
+    },
+    "logLevel": "debug",
+    "changeOrigin": true
+  }
+}

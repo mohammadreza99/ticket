@@ -1,0 +1,365 @@
+<div >
+  <p-table
+    [value]="rowData"
+    responsiveLayout="scroll"
+    [rowHover]="true"
+    (onSort)="sortColumn($event)"
+    [customSort]="true"
+    [selection]="selection"
+    (selectionChange)="onSelectionChange($event)"
+    styleClass="p-datatable-{{ size }}"
+    [paginator]="localPaginator"
+    dataKey="id"
+    [selectionPageOnly]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [rows]="localPaginator ? 10 : null"
+    #dataTable
+  >
+    <ng-template pTemplate="caption">
+      <div
+        class="d-flex align-items-center justify-content-between py-3 flex-column flex-md-row"
+        *ngIf="showCaption"
+      >
+        <div
+          class="table-caption w-100 mb-3 mb-md-0 d-flex flex-column flex-md-row"
+        >
+          <div class="d-flex">
+            <i [class]="captionIcon"></i>
+            <h5 class="mb-0">{{ captionText }}</h5>
+          </div>
+          <ng-content [select]="captionElem"></ng-content>
+        </div>
+        <div class="table-actions w-100">
+          <ng-container *ngIf="enableSearch">
+            <div
+              class="table-search"
+              [class.mr-md-5]="captionText || captionIcon"
+            >
+              <input
+                type="text"
+                (keydown.enter)="onSearch()"
+                [(ngModel)]="searchTerm"
+                [placeholder]="'search'"
+              />
+              <i class="pi pi-search" (click)="onSearch()"></i>
+              <i class="pi pi-times" (click)="toggleSearch()"></i>
+              <!-- <button class="pi pi-close" (click)="toggleSearch()">
+                <span aria-hidden="true">&times;</span>
+              </button> -->
+            </div>
+            <a
+              *ngIf="!searchbarOpened"
+              tooltipPosition="bottom"
+              [pTooltip]="'جستجو'"
+              (click)="toggleSearch()"
+            >
+              <i class="pi pi-search"></i>
+            </a>
+          </ng-container>
+          <a
+            *ngFor="let action of actions"
+            tooltipPosition="bottom"
+            [pTooltip]="action.header"
+            (click)="onActionClick(action.field)"
+          >
+            <i [class]="action.icon"></i>
+          </a>
+          <!-- <ng-container *ngIf="enableFilter">
+            <a
+              tooltipPosition="bottom"
+              [pTooltip]="'جستجو'"
+              (click)="onActionClick('onFilter')"
+            >
+              <i class="pi pi-search"></i>
+            </a>
+          </ng-container> -->
+          <ng-container *ngIf="enableReload">
+            <a
+              tooltipPosition="bottom"
+              [pTooltip]="'بازنشانی'"
+              (click)="onActionClick('onReload')"
+            >
+              <i class="pi pi-refresh"></i>
+            </a>
+          </ng-container>
+          <ng-container *ngIf="enableAdd">
+            <a
+              tooltipPosition="bottom"
+              [pTooltip]="'افزودن'"
+              (click)="onActionClick('onAdd')"
+            >
+              <i class="pi pi-plus"></i>
+            </a>
+          </ng-container>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngIf="enableSelection" style="width: 3rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th *ngIf="hasIndex">#</th>
+        <th *ngFor="let item of config?.colDef" [pSortableColumn]="item.field">
+          {{ item.header }}
+          <p-sortIcon *ngIf="item.sortabled" [field]="item.field"></p-sortIcon>
+        </th>
+        <th *ngFor="let item of config?.actionConfig">
+          {{ item.header }}
+        </th>
+      </tr>
+      <tr>
+        <th *ngIf="enableSelection"></th>
+        <th *ngIf="hasIndex"></th>
+        <th *ngFor="let col of config?.colDef">
+          <ng-container
+            *ngIf="col.filterOption"
+            [ngSwitch]="
+              col?.filterOption.type ? col.filterOption.type : col?.type
+            "
+          >
+            <p-columnFilter
+              *ngSwitchCase="'text'"
+              [showMenu]="false"
+              [field]="col.filterOption.field"
+              [showClearButton]="false"
+            >
+              <ng-template
+                let-filter="filterCallback"
+                let-value
+                pTemplate="filter"
+              >
+                <ng-input-text
+                  (onChange)="
+                    filterColumn($event.target.value, col.filterOption.field)
+                  "
+                  [ngModel]="value || col.filterOption.value"
+                  [placeholder]="col.filterOption.placeholder"
+                  [rtl]="true"
+                  inputSize="sm"
+                ></ng-input-text>
+              </ng-template>
+            </p-columnFilter>
+            <!-- <p-columnFilter
+              *ngSwitchCase="'boolean'"
+              [showMenu]="false"
+              [field]="col.filterOption.field"
+              [showClearButton]="false"
+              type="boolean"
+            ></p-columnFilter> -->
+            <p-columnFilter
+              *ngSwitchCase="'dropdownImg'"
+              [showMenu]="false"
+              [field]="col.filterOption.field"
+              [showClearButton]="false"
+            >
+              <ng-template
+                let-filter="filterCallback"
+                let-value
+                pTemplate="filter"
+              >
+                <ng-dropdown
+                  (onChange)="
+                    filterColumn($event.value, col.filterOption.field)
+                  "
+                  [ngModel]="value || col.filterOption.value"
+                  [optionValue]="col.filterOption.optionValue"
+                  [optionLabel]="col.filterOption.optionLabel"
+                  [options]="col.options || col.filterOption.options"
+                  [placeholder]="col.filterOption.placeholder"
+                  [autoDisplayFirst]="false"
+                  [showClear]="true"
+                  [rtl]="true"
+                  inputSize="sm"
+                ></ng-dropdown>
+              </ng-template>
+            </p-columnFilter>
+            <p-columnFilter
+              *ngSwitchCase="'dropdown'"
+              [showMenu]="false"
+              [field]="col.filterOption.field"
+              [showClearButton]="false"
+            >
+              <ng-template
+                let-filter="filterCallback"
+                let-value
+                pTemplate="filter"
+              >
+                <ng-dropdown
+                  (onChange)="
+                    filterColumn($event.value, col.filterOption.field)
+                  "
+                  [ngModel]="value || col.filterOption.value"
+                  [optionValue]="col.filterOption.optionValue"
+                  [optionLabel]="col.filterOption.optionLabel"
+                  [options]="col.options || col.filterOption.options"
+                  [placeholder]="col.filterOption.placeholder"
+                  [autoDisplayFirst]="false"
+                  [showClear]="true"
+                  [rtl]="true"
+                  inputSize="sm"
+                ></ng-dropdown>
+              </ng-template>
+            </p-columnFilter>
+            <p-columnFilter
+              *ngSwitchCase="'date'"
+              [showMenu]="false"
+              [field]="col.filterOption.field"
+              [showClearButton]="false"
+            >
+              <ng-template
+                let-filter="filterCallback"
+                let-value
+                pTemplate="filter"
+              >
+                <div class="d-flex align-items-center flex-column">
+                  <div class="d-flex align-items-center">
+                    <span class="ml-2">از </span>
+                    <ng-date-picker
+                      (onChange)="
+                        onFromDateChange($event, col.filterOption.field)
+                      "
+                      [inline]="false"
+                      inputSize="sm"
+                    ></ng-date-picker>
+                  </div>
+                  <div class="d-flex align-items-center mt-1">
+                    <span class="ml-2">تا </span>
+                    <ng-date-picker
+                      (onChange)="
+                        onToDateChange($event, col.filterOption.field)
+                      "
+                      [inline]="false"
+                      inputSize="sm"
+                    ></ng-date-picker>
+                  </div>
+                </div>
+              </ng-template>
+            </p-columnFilter>
+            <p-columnFilter
+              *ngSwitchCase="'range'"
+              [field]="col.filterOption.field"
+              [showClearButton]="false"
+              [showMenu]="false"
+            >
+              <ng-template let-filter="filterCallback" pTemplate="filter">
+                <div class="d-flex align-items-center flex-column">
+                  <div class="d-flex align-items-center">
+                    <span class="ml-2">از </span>
+                    <ng-input-text
+                      (onChange)="
+                        onFromRangeChange($event, col.filterOption.field)
+                      "
+                      inputSize="sm"
+                    ></ng-input-text>
+                  </div>
+                  <div class="d-flex align-items-center mt-1">
+                    <span class="ml-2">تا </span>
+                    <ng-input-text
+                      (onChange)="
+                        onToRangeChange($event, col.filterOption.field)
+                      "
+                      inputSize="sm"
+                    ></ng-input-text>
+                  </div>
+                </div>
+              </ng-template>
+            </p-columnFilter>
+          </ng-container>
+        </th>
+        <th *ngFor="let item of config?.actionConfig"></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+      <tr (click)="onRowClick(item)"
+          [style.background]="(item?.id==activeRow?.id)&& item.id ? '#b6f5ff' : item?.backgroundColor">
+        <td *ngIf="enableSelection" style="width: 3rem">
+          <p-tableCheckbox [value]="item"></p-tableCheckbox>
+        </td>
+        <td *ngIf="hasIndex">
+          {{ rowIndex + 1 + (+pageInfo.startIndex * +pageInfo.pageSize) }}
+        </td>
+        <td *ngFor="let col of config.colDef; let i = index">
+          <ng-container [ngSwitch]="col?.type">
+            <ng-container *ngSwitchCase="'dropdown'">
+              {{ getItemName(item[col.field], col)?.label }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'dropdownImg'">
+              <img *ngIf="getItemName(item[col.field], col)?.url"
+                   [src]="'../../../../assets/images/'+getItemName(item[col.field], col)?.url">
+            </ng-container>
+            <ng-container *ngSwitchCase="'date'">
+              {{ item[col.field] | jalali }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'time'">
+              {{ item[col.field] | jalalitime }}
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+              {{
+              col.templateString
+                ? col.templateString(item)
+                : col.subField
+                  ? item[col.field]
+                    ? item[col.field][col?.subField]
+                    : ""
+                  : item[col.field]
+              }}
+            </ng-container>
+          </ng-container>
+        </td>
+        <td *ngFor="let action of config?.actionConfig">
+          <a
+            *ngIf="action.routerLink"
+            [routerLink]="
+              action.routerLinkParam
+                ? action.routerLink + '/' + item[action.routerLinkParam]
+                : action.routerLink
+            "
+          >
+            <!-- <ng-button
+              class="action-button"
+              [icon]="action.icon"
+              appearance="outlined"
+              [color]="action.color"
+              (click)="onColActionClick(action.field, item)"
+            ></ng-button> -->
+            <i [class]="action.icon"></i>
+          </a>
+          <a *ngIf="!action.routerLink">
+            <!-- <ng-button
+              class="action-button"
+              [icon]="action.icon"
+              appearance="outlined"
+              [color]="action.color"
+              (click)="onColActionClick(action.field, item)"
+            ></ng-button> -->
+              <i [class]="action.icon" class="action-button" (click)="onColActionClick(action.field, item)"></i>
+           
+          </a>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td
+          class="text-center"
+          [attr.colspan]="
+            config.colDef.length + config?.actionConfig?.length + enableSelection + hasIndex
+          "
+        >
+          <ng-empty [message]="'nothingFound'"></ng-empty>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <p-paginator
+        *ngIf="!localPaginator && config?.total"
+        [rows]="rows"
+        [first]="first"
+        (onPageChange)="onPageChange($event)"
+        [rowsPerPageOptions]="rowsPerPageOptions"
+        [totalRecords]="config.total"
+      ></p-paginator>
+    </ng-template>
+  </p-table>
+</div>
