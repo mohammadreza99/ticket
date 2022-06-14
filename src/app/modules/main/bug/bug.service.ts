@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from '@core/http';
+import {FilterConfig} from "@core/models/apis";
 
 
 @Injectable({
@@ -11,16 +12,16 @@ export class BugService extends ApiService {
     super();
   }
 
-  getBugs(page_number, page_limit, user_id) {
+  getBugs(filter: FilterConfig, user_id: number) {
     return this._post(``,
       {
         method: 'getBugs',
-        data: {page_number, page_limit, user_id},
+        data: {...filter, user_id},
       }
     );
   }
 
-  closeBug(bug_id) {
+  closeBug(bug_id: number) {
     return this._post(``,
       {
         method: 'closeBug',
