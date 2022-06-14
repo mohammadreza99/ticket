@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {TableConfig} from '@core/models';
-import {NgDialogFormConfig, NgDialogFormInputTypes} from '@ng/models/overlay';
-import {UtilsService} from '@ng/services';
-import {OperatorService} from './operator.service';
-import {FilterConfig} from "@core/models/apis";
-import {Operator} from "@modules/main/operator/operator";
+import { Component, OnInit } from '@angular/core';
+import { TableConfig } from '@core/models';
+import { NgDialogFormConfig, NgDialogFormInputTypes } from '@ng/models/overlay';
+import { UtilsService } from '@ng/services';
+import { OperatorService } from './operator.service';
+import { FilterConfig } from "@core/models/apis";
+import { Operator } from "@modules/main/operator/operator";
 
 @Component({
   selector: 'ng-operator',
@@ -16,7 +16,7 @@ export class OperatorPage implements OnInit {
   }
 
   ngOnInit() {
-    this.loadData();
+    this.loadData({ page_number: 1, page_limit: 10 });
   }
 
   operators: Operator[];
@@ -84,7 +84,7 @@ export class OperatorPage implements OnInit {
       },
     ],
     onFetch: (params) => {
-      this.loadData({page_number: params.startIndex + 1, page_limit: params.pageSize});
+      this.loadData({ page_number: params.startIndex + 1, page_limit: params.pageSize });
     },
     onColActionClick: (params) => {
       if (params.action == 'onTransform')
@@ -93,26 +93,25 @@ export class OperatorPage implements OnInit {
         this.openModifyOperatorDialog(params.col)
     },
     onHeaderActionClick: (params) => {
-
       if (params == "onAdd")
         this.openModifyOperatorDialog();
     },
     onSearch: (params) => {
-      this.loadData({search_text: params, page_number: 1});
+      this.loadData({ search_text: params, page_number: 1 , page_limit: 10 });
     }
   };
 
   async loadData(filter?: FilterConfig) {
-    let data = await this.operatorService.getOperators(filter).toPromise();
+    let data =  (await this.operatorService.getOperators(filter).toPromise()).data;
     this.config.total = data.total_counts;
     this.operators = data.operators;
   }
 
   async openTransformOperatorDialog(operatorId: number) {
-    const operators = await this.operatorService.getOperators({
+    const operators = (await this.operatorService.getOperators({
       page_number: 1,
       page_limit: this.config.total,
-    }).toPromise();
+    }).toPromise()).data;
     let dialogFormConfig: NgDialogFormConfig[] = [
       {
         type: 'multi-select',
@@ -144,9 +143,9 @@ export class OperatorPage implements OnInit {
       }
     ];
     this.utilsService.showDialogForm('مدیریت', dialogFormConfig, {
-        width: '70%',
-        rtl: true,
-      }
+      width: '70%',
+      rtl: true,
+    }
     ).onClose.subscribe((res) => {
       if (res) {
         this.operatorService.transferOperatorTickets(res).toPromise();
