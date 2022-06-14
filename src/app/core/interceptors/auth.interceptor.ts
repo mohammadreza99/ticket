@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse,} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {AuthService} from '@core/http';
 import {Router} from '@angular/router';
 import {filter, tap} from 'rxjs/operators';
+import {AuthService} from "@modules/auth/login/auth.service";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -22,7 +22,7 @@ export class AuthInterceptor implements HttpInterceptor {
       }
     }
     return next.handle(request).pipe(filter(e => e instanceof HttpResponse),
-      tap((e: any) => {
+      tap(async (e: any) => {
         if (e.body?.status === 'UNAUTHENTICATED') {
           if (this.router.url == 'auth/login') {
             return;

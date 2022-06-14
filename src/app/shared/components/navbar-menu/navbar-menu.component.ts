@@ -1,10 +1,10 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { UtilsService } from '@ng/services';
-import { MenuItem } from 'primeng/api';
-import { MenuType } from '@core/models/menu-types.mode';
-import { AuthService } from '@core/http';
-import { Sidebar } from 'primeng/sidebar';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild} from '@angular/core';
+import {Router} from '@angular/router';
+import {UtilsService} from '@ng/services';
+import {MenuItem} from 'primeng/api';
+import {MenuType} from '@core/models/menu-types.mode';
+import {Sidebar} from 'primeng/sidebar';
+import {AuthService} from "@modules/auth/login/auth.service";
 
 @Component({
   selector: 'ng-navbar-menu',
@@ -28,6 +28,7 @@ export class NavbarMenuComponent
         );
         if (dialogRes) {
           this.authService.logout();
+          this.router.navigate(['/auth/login'])
         }
       }
     }
@@ -52,7 +53,7 @@ export class NavbarMenuComponent
   @Input('sidebarItems') set setSidebarItems(items: MenuItem[]) {
     this.sidebarItems = items;
     for (let i = 0; i < this.sidebarItems.length; i++) {
-      Object.assign(this.sidebarItems[i], { id: i })
+      Object.assign(this.sidebarItems[i], {id: i})
       if (this.sidebarItems[i].routerLink) {
         Object.assign(this.sidebarItems[i], {
           command: (args) => {
@@ -72,12 +73,14 @@ export class NavbarMenuComponent
     private renderer: Renderer2
   ) {
   }
+
   onMenuItemClick(args, menuItem) {
     // console.log(args.path[0].innerText);
     this.activeMenu = menuItem.id;
     if (!this.sidebarLock)
       this.handleSidebarLockToggler();
   }
+
   onPanelMenuIconsHover(args) {
     console.log(this.sidebar);
   }
@@ -122,7 +125,7 @@ export class NavbarMenuComponent
 
   loadData() {
     const menuTypes = ['overlay', 'overlay-mask', 'push', 'push-mask', 'hover', 'static', 'horizontal'];
-    this.menuTypes = menuTypes.map((t) => ({ label: t, value: t }));
+    this.menuTypes = menuTypes.map((t) => ({label: t, value: t}));
   }
 
   get isModalSidebar() {

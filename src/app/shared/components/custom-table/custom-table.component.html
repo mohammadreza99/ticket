@@ -1,4 +1,4 @@
-<div >
+<div>
   <p-table
     [value]="rowData"
     responsiveLayout="scroll"
@@ -295,15 +295,13 @@
               {{ item[col.field] | jalalitime }}
             </ng-container>
             <ng-container *ngSwitchDefault>
-              {{
-              col.templateString
+              <span [innerHTML]="col.templateString
                 ? col.templateString(item)
                 : col.subField
                   ? item[col.field]
                     ? item[col.field][col?.subField]
-                    : ""
-                  : item[col.field]
-              }}
+                    : ''
+                  : item[col.field]"></span>
             </ng-container>
           </ng-container>
         </td>
@@ -333,8 +331,8 @@
               [color]="action.color"
               (click)="onColActionClick(action.field, item)"
             ></ng-button> -->
-              <i [class]="action.icon" class="action-button" (click)="onColActionClick(action.field, item)"></i>
-           
+            <i [class]="action.icon" class="action-button" (click)="onColActionClick(action.field, item)"></i>
+
           </a>
         </td>
       </tr>

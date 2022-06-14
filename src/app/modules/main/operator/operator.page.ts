@@ -3,6 +3,8 @@ import {TableConfig} from '@core/models';
 import {NgDialogFormConfig, NgDialogFormInputTypes} from '@ng/models/overlay';
 import {UtilsService} from '@ng/services';
 import {OperatorService} from './operator.service';
+import {FilterConfig} from "@core/models/apis";
+import {Operator} from "@modules/main/operator/operator";
 
 @Component({
   selector: 'ng-operator',
@@ -17,12 +19,8 @@ export class OperatorPage implements OnInit {
     this.loadData();
   }
 
-  pageInfo = {
-    page_number: 1,
-    page_limit: 10
-  }
-  operators;
-  allOperators;
+  operators: Operator[];
+  allOperators: Operator[];
   config: TableConfig = {
     colDef: [
       {
@@ -86,9 +84,7 @@ export class OperatorPage implements OnInit {
       },
     ],
     onFetch: (params) => {
-      this.pageInfo.page_number = params.startIndex + 1;
-      this.pageInfo.page_limit = params.pageSize;
-      this.loadData();
+      this.loadData({page_number: params.startIndex + 1, page_limit: params.pageSize});
     },
     onColActionClick: (params) => {
       if (params.action == 'onTransform')
@@ -102,83 +98,70 @@ export class OperatorPage implements OnInit {
         this.openModifyOperatorDialog();
     },
     onSearch: (params) => {
-      this.pageInfo.page_number = 1;
-      this.loadData(params);
+      this.loadData({search_text: params, page_number: 1});
     }
   };
 
-  async loadData(searchText = null) {
-    let filterObj = this.pageInfo;
-    if (searchText)
-      Object.assign(filterObj, {
-        search_text: searchText
-      })
-    let data: any = await this.operatorService.getOperators(filterObj).toPromise();
+  async loadData(filter?: FilterConfig) {
+    let data = await this.operatorService.getOperators(filter).toPromise();
     this.config.total = data.total_counts;
-    this.allOperators = await this.operatorService.getOperators({
-      page_number: 1,
-      page_limit: data.total_counts,
-    }).toPromise();
     this.operators = data.operators;
-    this.allOperators = this.allOperators.operators;
-
   }
 
-  openTransformOperatorDialog(operatorId) {
-    let dialogFormConfig: NgDialogFormConfig[] = [];
-    dialogFormConfig.push({
-      type: 'multi-select',
-      formControlName: 'target_operator_ids',
-      label: 'انتقال به سایر اوپراتور ها',
-      labelPos: 'fix-top',
-      className: '',
-      labelWidth: 200,
-      optionValue: 'operator_id',
-      optionLabel: 'username',
-      display: 'chip',
-      options: this.allOperators,
-      value: []
-    });
-    dialogFormConfig.push({
-      type: 'switch',
-      formControlName: 'deactivate_user',
-      label: 'غیر فعال کردن کاربر',
-      labelPos: 'fix-top',
-      className: '',
-      labelWidth: 200,
-      value: false
-    });
-    dialogFormConfig.push({
-      type: 'text',
-      formControlName: 'operator_id',
-      visible: false,
-      value: operatorId
-    });
-    const dialogform = this.utilsService.showDialogForm(
-      'مدیریت',
-      dialogFormConfig,
+  async openTransformOperatorDialog(operatorId: number) {
+    const operators = await this.operatorService.getOperators({
+      page_number: 1,
+      page_limit: this.config.total,
+    }).toPromise();
+    let dialogFormConfig: NgDialogFormConfig[] = [
       {
+        type: 'multi-select',
+        formControlName: 'target_operator_ids',
+        label: 'انتقال به سایر اوپراتور ها',
+        labelPos: 'fix-top',
+        className: '',
+        labelWidth: 200,
+        optionValue: 'operator_id',
+        optionLabel: 'username',
+        display: 'chip',
+        options: operators,
+        value: []
+      },
+      {
+        type: 'switch',
+        formControlName: 'deactivate_user',
+        label: 'غیر فعال کردن کاربر',
+        labelPos: 'fix-top',
+        className: '',
+        labelWidth: 200,
+        value: false
+      },
+      {
+        type: 'text',
+        formControlName: 'operator_id',
+        visible: false,
+        value: operatorId
+      }
+    ];
+    this.utilsService.showDialogForm('مدیریت', dialogFormConfig, {
         width: '70%',
         rtl: true,
       }
-    );
-    dialogform.onClose.subscribe((res) => {
+    ).onClose.subscribe((res) => {
       if (res) {
         this.operatorService.transferOperatorTickets(res).toPromise();
       }
     });
   }
 
-  openModifyOperatorDialog(value = null) {
+  openModifyOperatorDialog(value?: Operator) {
     let dialogFormConfig: NgDialogFormConfig[] = value
-      ? [
-        {
-          type: 'text',
-          formControlName: 'operator_id',
-          visible: false,
-          value: value.id,
-        },
-      ]
+      ? [{
+        type: 'text',
+        formControlName: 'operator_id',
+        visible: false,
+        value: value.operator_id,
+      }]
       : [];
     this.config.colDef.forEach((item) => {
       if (!item.templateString)
@@ -202,21 +185,21 @@ export class OperatorPage implements OnInit {
         });
     });
 
-    const dialogform = this.utilsService.showDialogForm(
+    this.utilsService.showDialogForm(
       value ? 'ویرایش' : 'افزودن',
       dialogFormConfig,
       {
         width: '70%',
         rtl: true,
       }
-    );
-    dialogform.onClose.subscribe((res) => {
+    ).onClose.subscribe((res) => {
       if (res) {
         console.log(res);
-        if (value)
+        if (value) {
           this.operatorService.editOperator(res).toPromise();
-        else
+        } else {
           this.operatorService.addOperator(res).toPromise();
+        }
       }
     });
   }

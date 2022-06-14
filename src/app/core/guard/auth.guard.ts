@@ -9,7 +9,7 @@ import {
   RouterStateSnapshot,
   UrlSegment
 } from '@angular/router';
-import {AuthService} from '@core/http';
+import {AuthService} from "@modules/auth/login/auth.service";
 
 @Injectable({
   providedIn: 'root'
