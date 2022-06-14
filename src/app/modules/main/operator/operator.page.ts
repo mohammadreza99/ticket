@@ -33,11 +33,18 @@ export class OperatorPage implements OnInit {
         field: 'username',
         type: 'text',
       },
-      // {
-      //   header: 'allowed_ips',
-      //   field: 'name',
-      //   type: 'text',
-      // },
+      {
+        header: 'allowed_ips',
+        field: 'allowed_ips',
+        type: 'text',
+        templateString: (res) => {
+          let ips = ''
+          for (const item of res.allowed_ips) {
+            ips += `<span class="chips">${item}</span>`;
+          }
+          return ips;
+        }
+      },
       {
         header: 'وضعیت',
         field: 'status',
@@ -97,14 +104,77 @@ export class OperatorPage implements OnInit {
         this.openModifyOperatorDialog();
     },
     onSearch: (params) => {
-      this.loadData({ search_text: params, page_number: 1 , page_limit: 10 });
+      this.loadData({ search_text: params, page_number: 1, page_limit: 10 });
     }
   };
 
   async loadData(filter?: FilterConfig) {
-    let data =  (await this.operatorService.getOperators(filter).toPromise()).data;
+    let data = (await this.operatorService.getOperators(filter).toPromise()).data;
     this.config.total = data.total_counts;
     this.operators = data.operators;
+  }
+
+  openModifyOperatorDialog(value?: Operator) {
+    let dialogFormConfig: NgDialogFormConfig[] = value
+      ? [{
+        type: 'text',
+        formControlName: 'operator_id',
+        visible: false,
+        value: value.operator_id,
+      }]
+      : [];
+    this.config.colDef.forEach((item) => {
+      if (!item.templateString)
+        dialogFormConfig.push({
+          type: item.type as NgDialogFormInputTypes,
+          formControlName: item.field,
+          label: item.header,
+          labelWidth: 200,
+          value: value ? value[item.field] : '',
+          className: 'col-12 col-md-6',
+        });
+      else {
+        if (item.field == "status") {
+          dialogFormConfig.push({
+            type: 'dropdown',
+            formControlName: item.field,
+            label: item.header,
+            labelWidth: 200,
+            value: value ? value[item.field] : '',
+            className: 'col-12 col-md-6',
+            options: item.options,
+          });
+        }
+        if (item.field == "allowed_ips") {
+          dialogFormConfig.push({
+            type: 'chips',
+            formControlName: item.field,
+            label: item.header,
+            labelWidth: 200,
+            value: value ? value[item.field] : '',
+            className: 'col-12 col-md-6',
+          });
+        }
+      }
+    });
+
+    this.utilsService.showDialogForm(
+      value ? 'ویرایش' : 'افزودن',
+      dialogFormConfig,
+      {
+        width: '70%',
+        rtl: true,
+      }
+    ).onClose.subscribe((res) => {
+      if (res) {
+        console.log(res);
+        if (value) {
+          this.operatorService.editOperator(res).toPromise();
+        } else {
+          this.operatorService.addOperator(res).toPromise();
+        }
+      }
+    });
   }
 
   async openTransformOperatorDialog(operatorId: number) {
@@ -153,53 +223,5 @@ export class OperatorPage implements OnInit {
     });
   }
 
-  openModifyOperatorDialog(value?: Operator) {
-    let dialogFormConfig: NgDialogFormConfig[] = value
-      ? [{
-        type: 'text',
-        formControlName: 'operator_id',
-        visible: false,
-        value: value.operator_id,
-      }]
-      : [];
-    this.config.colDef.forEach((item) => {
-      if (!item.templateString)
-        dialogFormConfig.push({
-          type: item.type as NgDialogFormInputTypes,
-          formControlName: item.field,
-          label: item.header,
-          labelWidth: 200,
-          value: value ? value[item.field] : '',
-          className: 'col-12 col-md-6',
-        });
-      else
-        dialogFormConfig.push({
-          type: 'dropdown',
-          formControlName: item.field,
-          label: item.header,
-          labelWidth: 200,
-          value: value ? value[item.field] : '',
-          className: 'col-12 col-md-6',
-          options: item.options,
-        });
-    });
 
-    this.utilsService.showDialogForm(
-      value ? 'ویرایش' : 'افزودن',
-      dialogFormConfig,
-      {
-        width: '70%',
-        rtl: true,
-      }
-    ).onClose.subscribe((res) => {
-      if (res) {
-        console.log(res);
-        if (value) {
-          this.operatorService.editOperator(res).toPromise();
-        } else {
-          this.operatorService.addOperator(res).toPromise();
-        }
-      }
-    });
-  }
 }
