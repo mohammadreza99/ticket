@@ -88,8 +88,6 @@ export class OperatorPage implements OnInit {
     onFetch: (params) => {
       this.pageInfo.page_number = params.startIndex + 1;
       this.pageInfo.page_limit = params.pageSize;
-      console.log(8888888888888);
-
       this.loadData();
     },
     onColActionClick: (params) => {
@@ -105,7 +103,6 @@ export class OperatorPage implements OnInit {
     },
     onSearch: (params) => {
       this.pageInfo.page_number = 1;
-      console.log(params);
       this.loadData(params);
     }
   };
