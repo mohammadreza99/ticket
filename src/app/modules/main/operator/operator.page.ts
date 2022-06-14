@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {TableConfig} from '@core/models';
-import {NgDialogFormConfig, NgDialogFormInputTypes} from '@ng/models/overlay';
-import {UtilsService} from '@ng/services';
-import {OperatorService} from './operator.service';
+import { Component, OnInit } from '@angular/core';
+import { TableConfig } from '@core/models';
+import { NgDialogFormConfig, NgDialogFormInputTypes } from '@ng/models/overlay';
+import { UtilsService } from '@ng/services';
+import { OperatorService } from './operator.service';
 
 @Component({
   selector: 'ng-operator',
@@ -113,12 +113,12 @@ export class OperatorPage implements OnInit {
       Object.assign(filterObj, {
         search_text: searchText
       })
-    let data: any = await this.operatorService.getOperators(filterObj).toPromise();
+    let data: any = (await this.operatorService.getOperators(filterObj).toPromise()).data;
     this.config.total = data.total_counts;
-    this.allOperators = await this.operatorService.getOperators({
+    this.allOperators = (await this.operatorService.getOperators({
       page_number: 1,
       page_limit: data.total_counts,
-    }).toPromise();
+    }).toPromise()).data;
     this.operators = data.operators;
     this.allOperators = this.allOperators.operators;
 
