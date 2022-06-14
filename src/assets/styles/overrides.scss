@@ -1,15 +1,25 @@
-input , .p-dropdown{
-    background-color: #f5f8fa!important;
-    border-color: #f5f8fa!important;
-    color: #5e6278!important;
-    border-radius: 0.475rem!important;
+input,
+.p-dropdown ,
+.p-multiselect {
+    background-color: #f5f8fa !important;
+    border-color: #f5f8fa !important;
+    color: #5e6278 !important;
+    border-radius: 0.475rem !important;
 }
-form label{
-    color: #181c32!important;
-    font-size: 1.075rem!important;
+
+form label {
+    color: #181c32 !important;
+    font-size: 1.075rem !important;
 }
+
 .p-button-primary {
-    color: #fff!important;
-    border-color: #009ef7!important;
-    background-color: #009ef7!important;  
+    color: #fff !important;
+    border-color: #009ef7 !important;
+    background-color: #009ef7 !important;
+}
+
+.p-button-danger {
+    color: #fff !important;
+    border-color: #f1416c !important;
+    background-color: #f1416c !important;
 }
