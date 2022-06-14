@@ -3,7 +3,7 @@ export class Operator {
   name: string;
   username: string;
   password: string;
-  status: UserStatus;
+  status: OperatorStatus;
   allowed_ips?: string[];
 }
 
@@ -12,8 +12,8 @@ export class TransferOperatorTickets {
   name: string;
   username: string;
   password: string;
-  status: UserStatus;
+  status: OperatorStatus;
   allowed_ips?: string[];
 }
 
-export type UserStatus = 'Active' | 'Inactive';
+export type OperatorStatus = 'Active' | 'Inactive';

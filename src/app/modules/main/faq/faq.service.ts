@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from '@core/http';
 import {Observable} from 'rxjs';
+import {FilterConfig} from "@core/models/apis";
+import {FAQ} from "@modules/main/faq/faq";
 
 
 @Injectable({
@@ -12,42 +14,38 @@ export class FAQService extends ApiService {
     super();
   }
 
-  getFAQs(data): Observable<any[]> {
+  getFAQs(filter: FilterConfig, category_id: number): Observable<any[]> {
     return this._post(``,
       {
         method: 'getFAQs',
-        data: data,
-        auth: ''
+        data: {...filter, category_id},
       }
     );
   }
 
-  addFAQ(data): Observable<any[]> {
+  addFAQ(data: FAQ): Observable<any[]> {
     return this._post(``,
       {
         method: 'addFAQ',
-        data: data,
-        auth: ''
+        data,
       }
     );
   }
 
-  editFAQ(data): Observable<any[]> {
+  editFAQ(data: FAQ): Observable<any[]> {
     return this._post(``,
       {
         method: 'editFAQ',
-        data: data,
-        auth: ''
+        data,
       }
     );
   }
 
-  removeFAQ(data): Observable<any[]> {
+  removeFAQ(faq_id: number): Observable<any[]> {
     return this._post(``,
       {
         method: 'removeFAQ',
-        data: data,
-        auth: ''
+        data: {faq_id},
       }
     );
   }

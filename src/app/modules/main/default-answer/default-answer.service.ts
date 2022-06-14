@@ -1,5 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from '@core/http';
+import {DefaultAnswer} from "@modules/main/default-answer/default-answer";
+import {FilterConfig} from "@core/models/apis";
 
 
 @Injectable({
@@ -11,7 +13,7 @@ export class DefaultAnswerService extends ApiService {
     super();
   }
 
-  addDefaultAnswer(category_id, answer, title) {
+  addDefaultAnswer(category_id: number, answer: string, title: string) {
     return this._post(``,
       {
         method: 'removeFAQ',
@@ -20,16 +22,16 @@ export class DefaultAnswerService extends ApiService {
     );
   }
 
-  editDefaultAnswer(default_answer_id, category_id, answer, title, updated_parameters) {
+  editDefaultAnswer(data: DefaultAnswer) {
     return this._post(``,
       {
         method: 'removeFAQ',
-        data: {default_answer_id, category_id, answer, title, updated_parameters},
+        data,
       }
     );
   }
 
-  RemoveDefaultAnswer(default_answer_id) {
+  RemoveDefaultAnswer(default_answer_id: number) {
     return this._post(``,
       {
         method: 'removeFAQ',
@@ -38,11 +40,11 @@ export class DefaultAnswerService extends ApiService {
     );
   }
 
-  getDefaultAnswers(category_id, search_text, page_limit, page_number) {
+  getDefaultAnswers(filter: FilterConfig, category_id: number) {
     return this._post(``,
       {
         method: 'removeFAQ',
-        data: {category_id, search_text, page_limit, page_number},
+        data: {...filter, category_id},
       }
     );
   }

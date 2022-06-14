@@ -1,85 +1,89 @@
 import {Injectable} from '@angular/core';
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest,} from '@angular/common/http';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
-import {catchError} from 'rxjs/operators';
-import {UtilsService} from '@ng/services';
-import {AuthService} from '@core/http';
+import {catchError, tap} from 'rxjs/operators';
+import {Router} from '@angular/router';
+import {MessageService} from '@core/utils';
+import {requests} from '@core/requests.config';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
-  constructor(private utilsService: UtilsService, private authService: AuthService) {
+  constructor(private router: Router, private messageService: MessageService) {
   }
 
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
+    const hasSuccessMessageApis = requests.filter(r => r.success);
+    const hasFailureMessageApis = requests.filter(r => r.failure);
     return next.handle(request).pipe(
+      tap((event: any) => {
+        const method = request.body?.method;
+        const status = event.body?.status;
+        if (status == 'OK') {
+          if (hasSuccessMessageApis.findIndex(x => x.method == method) >= 0) {
+            this.showSuccessToast();
+          }
+        }
+        if (status != 'OK' && !request.url.includes('.json')) {
+          if (hasFailureMessageApis.findIndex(x => x.method == method) >= 0) {
+            this.showFailureToast(status);
+          }
+          if (status == 'NOT_FOUND') {
+            // this.router.navigateByUrl('/404');
+          }
+        }
+        return event;
+      }),
       catchError((error: any) => {
         if (error) {
-          this.utilsService.showToast({
-            summary: 'خطا',
-            detail: error,
-          });
-          if (error.status === 401) {
-            this.authService.logout();
-          }
+          console.error(error);
+          this.showFailureToast(error);
           return throwError(error);
         }
-      })
+      }),
     );
   }
 
-  getErrorMessage(code: number): any {
-    switch (code) {
-      case 400: {
+  showSuccessToast() {
+    this.messageService.nextMessage({
+      severity: 'success',
+      detail: 'doneSuccessfully'
+    });
+  }
+
+  showFailureToast(status) {
+    this.messageService.nextMessage({
+      severity: 'error',
+      ...this.getErrorMessage(status)
+    });
+  }
+
+  getErrorMessage(status: string): any {
+    switch (status) {
+      case 'NOT_EMPTY':
         return {
-          title: `خطای ${code}`,
-          message: 'درخواست صحیح نمی باشد و قابل پردازش نیست',
+          detail: 'notEmptyError',
         };
-      }
-      case 401: {
+      case 'UNAUTHENTICATED':
         return {
-          title: `خطای ${code}`,
-          message: 'دوباره وارد سیستم شوید',
+          detail: 'unAuthenticatedError',
         };
-      }
-      case 403: {
+      case 'ACCESS_DENIED':
         return {
-          title: `خطای ${code}`,
-          message: 'اجرای درخواست مورد نظر برای شما امکان ندارد',
+          detail: 'accessDeniedError',
         };
-      }
-      case 404: {
+      case 'WRONG_CREDENTIAL':
         return {
-          title: `خطای ${code}`,
-          message: 'درخواست مورد نظر وجود ندارد',
+          detail: 'wrongCredential',
         };
-      }
-      case 405: {
-        return {
-          title: `خطای ${code}`,
-          message: 'متد استفاده شده برای درخواست مجاز نیست',
-        };
-      }
-      case 422: {
-        return {
-          title: `خطای ${code}`,
-          message: 'خطا در پردازش فیلدها',
-        };
-      }
-      case 500: {
-        return {
-          title: `خطای ${code}`,
-          message: 'خطا سمت سرور رخ داده است',
-        };
-      }
-      default: {
-        return {
-          title: `خطا`,
-          message: 'خطای ناشناس، امکان ارتباط با سرور وجود ندارد',
-        };
-      }
+      default:
+        if (status != undefined) {
+          return {
+            detail: 'errorOccurred',
+          };
+        }
     }
   }
 }

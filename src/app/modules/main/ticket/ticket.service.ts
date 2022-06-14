@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from '@core/http';
 import {Observable} from 'rxjs';
-
+import {FilterConfig} from "@core/models/apis";
+import {TicketStatus} from "@modules/main/ticket/ticket";
 
 @Injectable({
   providedIn: 'root',
@@ -12,38 +13,38 @@ export class TicketService extends ApiService {
     super();
   }
 
-  getTickets(data): Observable<any[]> {
+  getTickets(filter: FilterConfig, username: string, status: TicketStatus): Observable<any[]> {
     return this._post(``,
       {
         method: 'getTickets',
-        data: data
+        data: {...filter, username, status}
       }
     );
   }
 
-  answerTicket(data): Observable<any[]> {
+  answerTicket(ticket_id: number, answer: string, close_ticket: boolean): Observable<any[]> {
     return this._post(``,
       {
         method: 'answerTicket',
-        data: data
+        data: {ticket_id, answer, close_ticket}
       }
     );
   }
 
-  closeTicket(data): Observable<any[]> {
+  closeTicket(ticket_id: number): Observable<any[]> {
     return this._post(``,
       {
         method: 'closeTicket',
-        data: data
+        data: {ticket_id}
       }
     );
   }
 
-  getTicketConversations(data): Observable<any[]> {
+  getTicketConversations(filter: FilterConfig, ticket_id: number): Observable<any[]> {
     return this._post(``,
       {
         method: 'getTicketConversations',
-        data: data
+        data: {...filter, ticket_id}
       }
     );
   }

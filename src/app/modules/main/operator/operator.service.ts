@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {ApiService} from '@core/http';
 import {Observable} from 'rxjs';
 import {Operator, TransferOperatorTickets} from "@modules/main/operator/operator";
-import {SearchData} from "@core/models/apis";
+import {FilterConfig} from "@core/models/apis";
 
 @Injectable({
   providedIn: 'root',
@@ -13,12 +13,11 @@ export class OperatorService extends ApiService {
     super();
   }
 
-  getOperators(data: SearchData): Observable<any[]> {
+  getOperators(data: FilterConfig): Observable<any[]> {
     return this._post(``,
       {
         method: 'getOperators',
         data,
-        api_version: '0'
       }
     )
   }
@@ -28,7 +27,6 @@ export class OperatorService extends ApiService {
       {
         method: 'addOperator',
         data,
-        api_version: '0'
       }
     );
   }
@@ -38,7 +36,6 @@ export class OperatorService extends ApiService {
       {
         method: 'editOperator',
         data,
-        api_version: '0'
       }
     );
   }
@@ -48,7 +45,6 @@ export class OperatorService extends ApiService {
       {
         method: 'transferOperatorTickets',
         data,
-        api_version: '0'
       }
     );
   }

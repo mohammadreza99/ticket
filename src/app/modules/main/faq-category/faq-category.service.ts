@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from '@core/http';
 import {Observable} from 'rxjs';
+import {FilterConfig} from "@core/models/apis";
+import {FAQCategory} from "@modules/main/faq-category/faq-category";
 
 
 @Injectable({
@@ -12,42 +14,38 @@ export class FAQCategoryService extends ApiService {
     super();
   }
 
-  getFAQCategories(data): Observable<any[]> {
+  getFAQCategories(filter: FilterConfig): Observable<any[]> {
     return this._post(``,
       {
         method: 'getFAQCategories',
-        data: data,
-        auth: ''
+        data: {...filter},
       }
     );
   }
 
-  addFAQCategory(data): Observable<any[]> {
+  addFAQCategory(data: FAQCategory): Observable<any[]> {
     return this._post(``,
       {
         method: 'addFAQCategory',
-        data: data,
-        auth: ''
+        data,
       }
     );
   }
 
-  editFAQCategory(data): Observable<any[]> {
+  editFAQCategory(data: FAQCategory): Observable<any[]> {
     return this._post(``,
       {
         method: 'editFAQCategory',
-        data: data,
-        auth: ''
+        data,
       }
     );
   }
 
-  removeFAQCategory(data): Observable<any[]> {
+  removeFAQCategory(category_id: number): Observable<any[]> {
     return this._post(``,
       {
         method: 'removeFAQCategory',
-        data: data,
-        auth: ''
+        data: {category_id},
       }
     );
   }
