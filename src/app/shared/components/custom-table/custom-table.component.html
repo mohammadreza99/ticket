@@ -64,15 +64,15 @@
           >
             <i [class]="action.icon"></i>
           </a>
-          <!-- <ng-container *ngIf="enableFilter">
+          <ng-container *ngIf="enableFilter">
             <a
               tooltipPosition="bottom"
               [pTooltip]="'جستجو'"
               (click)="onActionClick('onFilter')"
             >
-              <i class="pi pi-search"></i>
+              <i class="pi pi-filter"></i>
             </a>
-          </ng-container> -->
+          </ng-container>
           <ng-container *ngIf="enableReload">
             <a
               tooltipPosition="bottom"

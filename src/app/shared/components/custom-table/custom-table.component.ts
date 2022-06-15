@@ -30,7 +30,7 @@ export class CustomTableComponent implements OnInit {
   @Input() enableSearch: boolean = false;
   @Input() enableAdd: boolean = true;
   @Input() enableReload: boolean = true;
-  @Input() enableFilter: boolean = true;
+  @Input() enableFilter: boolean = false;
   @Input() hasIndex: boolean = false;
   @Input() selection: any;
   @Input() first: number = 0;

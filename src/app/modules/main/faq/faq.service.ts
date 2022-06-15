@@ -14,11 +14,11 @@ export class FAQService extends ApiService {
     super();
   }
 
-  getFAQs(filter: FilterConfig, category_id: number): Observable<ResponseConfig> {
+  getFAQs(filter: FilterConfig): Observable<ResponseConfig> {
     return this._post(``,
       {
         method: 'getFAQs',
-        data: {...filter, category_id},
+        data: {...filter},
       }
     );
   }

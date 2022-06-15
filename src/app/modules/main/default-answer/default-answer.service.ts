@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from '@core/http';
 import {DefaultAnswer} from "@modules/main/default-answer/default-answer";
-import {FilterConfig} from "@core/models/apis";
+import {FilterConfig, ResponseConfig} from "@core/models/apis";
+import { Observable } from 'rxjs';
 
 
 @Injectable({
@@ -13,38 +14,39 @@ export class DefaultAnswerService extends ApiService {
     super();
   }
 
-  addDefaultAnswer(category_id: number, answer: string, title: string) {
+  addDefaultAnswer(category_id: number, answer: string, title: string): Observable<ResponseConfig> {
     return this._post(``,
       {
-        method: 'removeFAQ',
+        method: 'addDefaultAnswer',
         data: {category_id, answer, title},
       }
     );
   }
 
-  editDefaultAnswer(data: DefaultAnswer) {
+  editDefaultAnswer(data: DefaultAnswer): Observable<ResponseConfig> {
     return this._post(``,
       {
-        method: 'removeFAQ',
+        method: 'editDefaultAnswer',
         data,
       }
     );
   }
 
-  RemoveDefaultAnswer(default_answer_id: number) {
+  
+  removeDefaultAnswer(default_answer_id: number) : Observable<ResponseConfig>{
     return this._post(``,
       {
-        method: 'removeFAQ',
+        method: 'RemoveDefaultAnswer',
         data: {default_answer_id},
       }
     );
   }
 
-  getDefaultAnswers(filter: FilterConfig, category_id: number) {
+  getDefaultAnswers(filter: FilterConfig): Observable<ResponseConfig>{
     return this._post(``,
       {
-        method: 'removeFAQ',
-        data: {...filter, category_id},
+        method: 'getDefaultAnswers',
+        data: {...filter},
       }
     );
   }
