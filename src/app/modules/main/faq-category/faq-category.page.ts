@@ -57,6 +57,11 @@ export class FAQCategoryPage implements OnInit {
         type: 'text',
         subField: 'title'
       },
+      {
+        header: '	عمومی',
+        field: 'is_published',
+        type: 'switch'
+      },
     ],
     actionConfig: [
       {
@@ -75,7 +80,13 @@ export class FAQCategoryPage implements OnInit {
     },
     onColActionClick: (params) => {
       if (params.action == 'onEdit')
-        this.openModifyFAQCategoryDialog(params.col)
+        this.openModifyFAQCategoryDialog(params.col);
+      if (params.action == 'onSwitchChange') { 
+
+      }
+      if (params.action == 'onDelete') {
+        this.deleteFAQCategory(params.col.category_id)
+      }
     },
     onHeaderActionClick: (params) => {
       if (params == "onAdd")
@@ -113,14 +124,15 @@ export class FAQCategoryPage implements OnInit {
         });
       else {
         if (item.field == "operators") {
+          let operator_ids=value[item.field].map(item => item.operator_id)
           dialogFormConfig.push({
             type: 'multi-select',
             display: 'chip',
             formControlName: item.field,
             label: item.header,
             labelWidth: 200,
-            value: value ? value[item.field] : '',
-            className: 'col-12 col-md-6',
+            value: value ? operator_ids : '',
+            className: 'col-12',
             options: this.allOperators,
             optionValue: 'operator_id',
             optionLabel: 'name',
@@ -133,7 +145,7 @@ export class FAQCategoryPage implements OnInit {
               allFAQCategories.push(cat)
             }
           })
-          
+
           dialogFormConfig.push({
             type: 'dropdown',
             formControlName: item.field,
@@ -141,7 +153,7 @@ export class FAQCategoryPage implements OnInit {
             labelWidth: 200,
             value: value && value[item.field] ? value[item.field]['category_id'] : '',
             className: 'col-12 col-md-6',
-            options: value ? allFAQCategories:this.FAQCategories,
+            options: value ? allFAQCategories : this.FAQCategories,
             optionValue: 'category_id',
             optionLabel: 'title',
           });
@@ -158,6 +170,13 @@ export class FAQCategoryPage implements OnInit {
     ).onClose.subscribe((res) => {
       if (res) {
         if (value) {
+          console.log(res);
+          
+          Object.assign(res,{
+            operator_ids:res.operators,
+            parent_category_id:res.parent_category,
+            updated_parameters:['title']
+          })
           this._FAQCategoryService.editFAQCategory(res).toPromise();
         } else {
           this._FAQCategoryService.addFAQCategory(res).toPromise();
@@ -166,5 +185,16 @@ export class FAQCategoryPage implements OnInit {
     });
   }
 
+  async deleteFAQCategory(category_id) {
+    const dialogRes = await this.utilsService.showConfirm({
+      header: 'حذف ',
+      message: 'آیا از حذف این دسته بندی مطمئن هستید؟',
+      rtl: true
+    });
+    if (dialogRes) {
+      await this._FAQCategoryService.removeFAQCategory(category_id).toPromise();
+      this.loadData();
+    }
+  }
 
 }

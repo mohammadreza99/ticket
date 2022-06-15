@@ -294,6 +294,13 @@
             <ng-container *ngSwitchCase="'time'">
               {{ item[col.field] | jalalitime }}
             </ng-container>
+            <ng-container *ngSwitchCase="'switch'">
+              <ng-switch
+              [value]="item[col.field]"
+              (onChange)="onSwitchChange($event,item)"
+              >
+              </ng-switch>
+            </ng-container>
             <ng-container *ngSwitchDefault>
               <span [innerHTML]="col.templateString
                 ? col.templateString(item)

@@ -56,6 +56,12 @@ export class CustomTableComponent implements OnInit {
     };
   }
 
+  async onSwitchChange(args , col){
+    await this.config.onColActionClick({
+      action: 'onSwitchChange',
+      col: col,
+    });
+  }
   getItemName(value, col) {
     return col?.options.find((item) => item?.value == value);
   }
@@ -165,8 +171,6 @@ export class CustomTableComponent implements OnInit {
   }
 
   onRowClick(item) {
-    console.log(item?.id == this.activeRow?.id);
-
     this.activeRow = item
   }
 }
