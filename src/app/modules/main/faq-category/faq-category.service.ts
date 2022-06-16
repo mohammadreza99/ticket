@@ -45,7 +45,7 @@ export class FAQCategoryService extends ApiService {
     return this._post(``,
       {
         method: 'removeFAQCategory',
-        data: {category_id},
+        data: {category_id:category_id},
       }
     );
   }
