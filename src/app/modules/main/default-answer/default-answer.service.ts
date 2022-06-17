@@ -14,15 +14,14 @@ export class DefaultAnswerService extends ApiService {
     super();
   }
 
-  addDefaultAnswer(category_id: number, answer: string, title: string): Observable<ResponseConfig> {
+  addDefaultAnswer(data:DefaultAnswer): Observable<ResponseConfig> {
     return this._post(``,
       {
         method: 'addDefaultAnswer',
-        data: {category_id, answer, title},
+        data,
       }
     );
   }
-
   editDefaultAnswer(data: DefaultAnswer): Observable<ResponseConfig> {
     return this._post(``,
       {

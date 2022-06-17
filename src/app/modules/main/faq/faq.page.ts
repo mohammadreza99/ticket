@@ -17,6 +17,7 @@ export class FAQPage implements OnInit {
   constructor(private _FAQService: FAQService, private _FAQCategoryService: FAQCategoryService, private utilsService: UtilsService) {
   }
   FAQCategories = [];
+  pageInfo={ page_number: 1, page_limit: 10 }
   async ngOnInit() {
     this.FAQCategories = (await this._FAQCategoryService.getFAQCategories({ page_number: 1, page_limit: 30 }).toPromise()).data.faq_categories;
     this.config.colDef=[
@@ -43,11 +44,15 @@ export class FAQPage implements OnInit {
       {
         header: '	دسته',
         field: 'category',
-        type: 'text',
+        type: 'dropdown',
         options:this.FAQCategories,
         optionLabel: 'title',
         optionValue: 'category_id',
-        subField:'title'
+        filterOption:{
+          field: 'category',
+          optionLabel: 'title',
+          optionValue: 'category_id',
+        }
       },
       {
         header: '	عمومی',
@@ -55,7 +60,7 @@ export class FAQPage implements OnInit {
         type: 'switch'
       },
     ];
-    this.loadData({ page_number: 1, page_limit: 10 });
+    this.loadData(this.pageInfo);
   }
 
   FAQ: FAQ[] = [];
@@ -74,13 +79,31 @@ export class FAQPage implements OnInit {
       },
     ],
     onFetch: (params) => {
-      this.loadData({ page_number: params.startIndex + 1, page_limit: params.pageSize });
+      this.pageInfo={ page_number: params.startIndex + 1, page_limit: params.pageSize }
+      this.loadData(this.pageInfo);
     },
     onColActionClick: (params) => {
       if (params.action == 'onEdit')
         this.openModifyFAQDialog(params.col);
       if (params.action == 'onSwitchChange') {
-
+        let obj: FAQ = new FAQ();
+        Object.assign(obj, {
+          faq_id: params.col.faq_id,
+          is_published: !params.col.is_published,
+          updated_parameters: ['is_published'],
+        });
+        this._FAQService.editFAQ(obj)
+          .toPromise()
+          .then((result) => {
+            if (result.status == 'OK') {
+              this.utilsService.showToast({
+                severity: 'success',
+                position: 'top-right',
+                detail: 'ویرایش با موفقیت انجام شد',
+              });
+              this.loadData(this.pageInfo);
+            }
+          });
       }
       if (params.action == 'onDelete') {
         this.deleteFAQ(params.col.faq_id)
@@ -91,7 +114,8 @@ export class FAQPage implements OnInit {
         this.openModifyFAQDialog();
     },
     onSearch: (params) => {
-      this.loadData({ search_text: params, page_number: 1, page_limit: 10 });
+      this.pageInfo={ page_number: 1, page_limit: 10 }
+      this.loadData({ search_text: params, ...this.pageInfo});
     }
   };
 
@@ -111,32 +135,22 @@ export class FAQPage implements OnInit {
       }]
       : [];
     this.config.colDef.forEach((item) => {
-      if (!item.templateString && !item.subField)
+      if (!item.templateString )
         dialogFormConfig.push({
           type: item.type as NgDialogFormInputTypes,
           formControlName: item.field,
           label: item.header,
           labelWidth: 200,
-          value: value ? value[item.field] : '',
+          value: value ?
+          item.field=='category' ?
+          value[item.field].category_id :
+          value[item.field] 
+          :item.type=='switch'?false : '' ,
           className: 'col-12 col-md-6',
           options: item.options,
           optionLabel: 'title',
           optionValue: 'category_id',
         });
-        else{
-          if(item.field=='category')
-          dialogFormConfig.push({
-            type: 'dropdown',
-            formControlName: item.field,
-            label: item.header,
-            labelWidth: 200,
-            value: value ? value[item.field].category_id : '',
-            className: 'col-12 col-md-6',
-            options: item.options,
-            optionLabel: 'title',
-            optionValue: 'category_id',
-          });
-        }
     });
     this.utilsService.showDialogForm(
       value ? 'ویرایش' : 'افزودن',
@@ -146,19 +160,52 @@ export class FAQPage implements OnInit {
         rtl: true,
       }
     ).onClose.subscribe((res) => {
+
       if (res) {
+        Object.assign(res, {
+          category_id: res.category
+        });
+        delete res.category
         if (value) {
-          Object.assign(res, {
-            updated_parameters: ['title']
-          })
-          this._FAQService.editFAQ(res).toPromise();
+          if (this.getUpdatedParameters(value, res).length != 0) {
+            Object.assign(res, {
+              updated_parameters: this.getUpdatedParameters(value, res),
+            });
+            this._FAQService.editFAQ(res).toPromise()
+              .then((result) => {
+                if (result.status == 'OK') {
+                  this.utilsService.showToast({
+                    severity: 'success',
+                    position: 'top-right',
+                    detail: 'ویرایش با موفقیت انجام شد',
+                  });
+                  this.loadData(this.pageInfo);
+                }
+              });
+          }
         } else {
-          this._FAQService.addFAQ(res).toPromise();
+          this._FAQService.addFAQ(res).toPromise()
+            .then((result) => {
+              if (result.status == 'OK') {
+                this.utilsService.showToast({
+                  severity: 'success',
+                  position: 'top-right',
+                  detail: 'افزودن با موفقیت انجام شد',
+                });
+                this.loadData(this.pageInfo);
+              }
+            });
         }
       }
     });
   }
-
+  getUpdatedParameters(oldVal, newVal) {
+    let updatedParameters = [];
+    for (const key in newVal) {
+      if (newVal[key] != oldVal[key]) updatedParameters.push(key);
+    }
+    return updatedParameters;
+  }
   async deleteFAQ(faq_id) {
     const dialogRes = await this.utilsService.showConfirm({
       header: 'حذف ',
@@ -166,8 +213,15 @@ export class FAQPage implements OnInit {
       rtl: true
     });
     if (dialogRes) {
-      await this._FAQService.removeFAQ(faq_id).toPromise();
-      this.loadData();
-    }
+      await this._FAQService.removeFAQ(faq_id).toPromise().then((result) => {
+        if (result.status == 'OK') {
+          this.utilsService.showToast({
+            severity: 'success',
+            position: 'top-right',
+            detail: 'حذف با موفقیت انجام شد',
+          });
+          this.loadData(this.pageInfo);
+        }})}
+      
   }
 }

@@ -27,16 +27,20 @@ export class DefaultAnswerPage implements OnInit {
       {
         header: '	پاسخ',
         field: 'answer',
-        type: 'text'
+        type: 'text',
       },
       {
         header: '	دسته',
         field: 'category',
-        type: 'text',
+        type: 'dropdown',
         options:this.categories,
         optionLabel: 'title',
         optionValue: 'category_id',
-        subField:'title'
+        filterOption:{
+          field: 'category',
+          optionLabel: 'title',
+          optionValue: 'category_id',
+        }
       },
     ];
     this.loadData({ page_number: 1, page_limit: 10 });
@@ -63,9 +67,6 @@ export class DefaultAnswerPage implements OnInit {
     onColActionClick: (params) => {
       if (params.action == 'onEdit')
         this.openModifydefaultAnswerDialog(params.col);
-      if (params.action == 'onSwitchChange') {
-
-      }
       if (params.action == 'onDelete') {
         this.deletedefaultAnswer(params.col.default_answer_id)
       }
@@ -84,7 +85,6 @@ export class DefaultAnswerPage implements OnInit {
     this.config.total = data.total_counts;
     this.defaultAnswer = data.default_answers;
   }
-
   openModifydefaultAnswerDialog(value?: DefaultAnswer) {
     let dialogFormConfig: NgDialogFormConfig[] = value
       ? [{
@@ -101,26 +101,16 @@ export class DefaultAnswerPage implements OnInit {
           formControlName: item.field,
           label: item.header,
           labelWidth: 200,
-          value: value ? value[item.field] : '',
+          value: value ?
+          item.field=='category' ?
+          value[item.field].category_id :
+          value[item.field] 
+          :item.type=='switch'?false : '' ,
           className: 'col-12 col-md-6',
           options: item.options,
           optionLabel: 'title',
           optionValue: 'category_id',
         });
-        else{
-          if(item.field=='category')
-          dialogFormConfig.push({
-            type: 'dropdown',
-            formControlName: item.field,
-            label: item.header,
-            labelWidth: 200,
-            value: value ? value[item.field].category_id : '',
-            className: 'col-12 col-md-6',
-            options: item.options,
-            optionLabel: 'title',
-            optionValue: 'category_id',
-          });
-        }
     });
     this.utilsService.showDialogForm(
       value ? 'ویرایش' : 'افزودن',
@@ -131,18 +121,50 @@ export class DefaultAnswerPage implements OnInit {
       }
     ).onClose.subscribe((res) => {
       if (res) {
+        Object.assign(res, {
+          category_id: res.category
+        });
+        delete res.category
         if (value) {
-          Object.assign(res, {
-            updated_parameters: ['title']
-          })
-          this.defaultAnswerService.editDefaultAnswer(res).toPromise();
+          if (this.getUpdatedParameters(value, res).length != 0) {
+            Object.assign(res, {
+              updated_parameters: this.getUpdatedParameters(value, res),
+            });
+            this.defaultAnswerService.editDefaultAnswer(res).toPromise()
+              .then((result) => {
+                if (result.status == 'OK') {
+                  this.utilsService.showToast({
+                    severity: 'success',
+                    position: 'top-right',
+                    detail: 'ویرایش با موفقیت انجام شد',
+                  });
+                  this.loadData({ page_number: 1, page_limit: 10 });
+                }
+              });
+          }
         } else {
-          // this.defaultAnswerService.addDefaultAnswer(res).toPromise();
+          this.defaultAnswerService.addDefaultAnswer(res).toPromise()
+            .then((result) => {
+              if (result.status == 'OK') {
+                this.utilsService.showToast({
+                  severity: 'success',
+                  position: 'top-right',
+                  detail: 'افزودن با موفقیت انجام شد',
+                });
+                this.loadData({ page_number: 1, page_limit: 10 });
+              }
+            });
         }
       }
     });
   }
-
+  getUpdatedParameters(oldVal, newVal) {
+    let updatedParameters = [];
+    for (const key in newVal) {
+      if (newVal[key] != oldVal[key]) updatedParameters.push(key);
+    }
+    return updatedParameters;
+  }
   async deletedefaultAnswer(default_answer_id) {
     const dialogRes = await this.utilsService.showConfirm({
       header: 'حذف ',
@@ -150,8 +172,15 @@ export class DefaultAnswerPage implements OnInit {
       rtl: true
     });
     if (dialogRes) {
-      await this.defaultAnswerService.removeDefaultAnswer(default_answer_id).toPromise();
-      this.loadData();
+      await this.defaultAnswerService.removeDefaultAnswer(default_answer_id).toPromise().then((result) => {
+        if (result.status == 'OK') {
+          this.utilsService.showToast({
+            severity: 'success',
+            position: 'top-right',
+            detail: 'حذف با موفقیت انجام شد',
+          });
+          this.loadData({ page_number: 1, page_limit: 10 });
+        }})
     }
   }
 }

@@ -2,7 +2,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
 import {MainPage} from './main.page';
 import {OperatorPage} from './operator/operator.page';
-import {FAQPage} from './faq/faq-page';
+import {FAQPage} from './faq/faq.page';
 import {TicketPage} from './ticket/ticket.page';
 import {BugPage} from '@modules/main/bug/bug.page';
 import {DefaultAnswerPage} from '@modules/main/default-answer/default-answer.page';

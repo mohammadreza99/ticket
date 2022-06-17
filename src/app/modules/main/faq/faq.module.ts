@@ -1,6 +1,6 @@
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FAQPage} from './faq-page';
+import {FAQPage} from './faq.page';
 import {SharedModule} from "@shared/shared.module";
 
 

@@ -282,7 +282,7 @@
         <td *ngFor="let col of config.colDef; let i = index">
           <ng-container [ngSwitch]="col?.type">
             <ng-container *ngSwitchCase="'dropdown'">
-              {{ getItemName(item[col.field], col)?.label }}
+              {{ getItemName(item[col.field], col)[col.optionLabel] }}
             </ng-container>
             <ng-container *ngSwitchCase="'dropdownImg'">
               <img *ngIf="getItemName(item[col.field], col)?.url"
