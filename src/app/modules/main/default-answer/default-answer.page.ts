@@ -16,6 +16,8 @@ export class DefaultAnswerPage implements OnInit {
   constructor(private defaultAnswerService: DefaultAnswerService, private categoryService: FAQCategoryService, private utilsService: UtilsService) {
   }
   categories = [];
+  pageInfo={ page_number: 1, page_limit: 10 };
+  filter = {};
   async ngOnInit() {
     this.categories = (await this.categoryService.getFAQCategories({ page_number: 1, page_limit: 30 }).toPromise()).data.faq_categories;
     this.config.colDef=[
@@ -43,7 +45,7 @@ export class DefaultAnswerPage implements OnInit {
         }
       },
     ];
-    this.loadData({ page_number: 1, page_limit: 10 });
+    this.loadData(this.pageInfo);
   }
 
   defaultAnswer: DefaultAnswer[] = [];
@@ -61,8 +63,15 @@ export class DefaultAnswerPage implements OnInit {
         icon: 'fad fa-trash',
       },
     ],
+    onFilter: (params) => {
+      Object.assign(this.filter, { filter: { category_id: params.category } });
+      Object.assign(this.filter, this.pageInfo);
+      this.loadData(this.filter);
+    },
     onFetch: (params) => {
-      this.loadData({ page_number: params.startIndex + 1, page_limit: params.pageSize });
+      this.pageInfo={ page_number: params.startIndex + 1, page_limit: params.pageSize }
+      Object.assign(this.filter, this.pageInfo);
+      this.loadData(this.filter);
     },
     onColActionClick: (params) => {
       if (params.action == 'onEdit')
@@ -76,7 +85,10 @@ export class DefaultAnswerPage implements OnInit {
         this.openModifydefaultAnswerDialog();
     },
     onSearch: (params) => {
-      this.loadData({ search_text: params, page_number: 1, page_limit: 10 });
+      this.pageInfo.page_number=1;
+      Object.assign(this.filter, { search_text: params});
+      Object.assign(this.filter, this.pageInfo);
+      this.loadData(this.filter);
     }
   };
 
@@ -138,7 +150,8 @@ export class DefaultAnswerPage implements OnInit {
                     position: 'top-right',
                     detail: 'ویرایش با موفقیت انجام شد',
                   });
-                  this.loadData({ page_number: 1, page_limit: 10 });
+                  Object.assign(this.filter, this.pageInfo);
+                  this.loadData(this.filter);
                 }
               });
           }
@@ -151,7 +164,8 @@ export class DefaultAnswerPage implements OnInit {
                   position: 'top-right',
                   detail: 'افزودن با موفقیت انجام شد',
                 });
-                this.loadData({ page_number: 1, page_limit: 10 });
+                Object.assign(this.filter, this.pageInfo);
+                this.loadData(this.filter);
               }
             });
         }
@@ -179,7 +193,8 @@ export class DefaultAnswerPage implements OnInit {
             position: 'top-right',
             detail: 'حذف با موفقیت انجام شد',
           });
-          this.loadData({ page_number: 1, page_limit: 10 });
+          Object.assign(this.filter, this.pageInfo);
+          this.loadData(this.filter);
         }})
     }
   }

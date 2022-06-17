@@ -21,7 +21,7 @@ export class FAQCategoryPage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.loadData({ page_number: 1, page_limit: 30 });
+    this.loadData(this.pageInfo);
     this.allOperators = (
       await this.operatorService
         .getOperators({
@@ -31,7 +31,7 @@ export class FAQCategoryPage implements OnInit {
         .toPromise()
     ).data.operators;
   }
-
+  pageInfo={ page_number: 1, page_limit: 30 }
   FAQCategories: FAQCategory[] = [];
   allOperators: Operator[];
   config: TableConfig = {
@@ -84,10 +84,11 @@ export class FAQCategoryPage implements OnInit {
       },
     ],
     onFetch: (params) => {
-      this.loadData({
+      this.pageInfo={
         page_number: params.startIndex + 1,
         page_limit: params.pageSize,
-      });
+      }
+      this.loadData(this.pageInfo);
     },
     onColActionClick: (params) => {
       if (params.action == 'onEdit')
@@ -109,7 +110,7 @@ export class FAQCategoryPage implements OnInit {
                 position: 'top-right',
                 detail: 'ویرایش با موفقیت انجام شد',
               });
-              this.loadData({ page_number: 1, page_limit: 10 });
+              this.loadData(this.pageInfo);
             }
           });
       }
@@ -121,7 +122,8 @@ export class FAQCategoryPage implements OnInit {
       if (params == 'onAdd') this.openModifyFAQCategoryDialog();
     },
     onSearch: (params) => {
-      this.loadData({ search_text: params, page_number: 1, page_limit: 10 });
+      this.pageInfo.page_number=1;
+      this.loadData({ search_text: params, ...this.pageInfo });
     },
   };
 
@@ -225,7 +227,7 @@ export class FAQCategoryPage implements OnInit {
                       position: 'top-right',
                       detail: 'ویرایش با موفقیت انجام شد',
                     });
-                    this.loadData({ page_number: 1, page_limit: 10 });
+                    this.loadData(this.pageInfo);
                   }
                 });
             }
@@ -240,7 +242,7 @@ export class FAQCategoryPage implements OnInit {
                     position: 'top-right',
                     detail: 'افزودن با موفقیت انجام شد',
                   });
-                  this.loadData({ page_number: 1, page_limit: 10 });
+                  this.loadData(this.pageInfo);
                 }
               });
           }
@@ -268,7 +270,7 @@ export class FAQCategoryPage implements OnInit {
             position: 'top-right',
             detail: 'حذف با موفقیت انجام شد',
           });
-          this.loadData({ page_number: 1, page_limit: 10 });
+          this.loadData(this.pageInfo);
         }
       });
     }

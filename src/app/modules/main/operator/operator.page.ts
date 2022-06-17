@@ -17,9 +17,9 @@ export class OperatorPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loadData({ page_number: 1, page_limit: 10 });
+    this.loadData(this.pageInfo);
   }
-
+ pageInfo={ page_number: 1, page_limit: 10 }
   operators: Operator[];
   config: TableConfig = {
     colDef: [
@@ -78,10 +78,11 @@ export class OperatorPage implements OnInit {
       },
     ],
     onFetch: (params) => {
-      this.loadData({
+      this.pageInfo={
         page_number: params.startIndex + 1,
         page_limit: params.pageSize,
-      });
+      }
+      this.loadData(this.pageInfo);
     },
     onColActionClick: (params) => {
       if (params.action == 'onTransform')
@@ -92,7 +93,8 @@ export class OperatorPage implements OnInit {
       if (params == 'onAdd') this.openModifyOperatorDialog();
     },
     onSearch: (params) => {
-      this.loadData({ search_text: params, page_number: 1, page_limit: 10 });
+      this.pageInfo.page_number=1;
+      this.loadData({ search_text: params, ...this.pageInfo});
     },
   };
 
@@ -183,7 +185,7 @@ export class OperatorPage implements OnInit {
                     position: 'top-right',
                     detail: 'ویرایش با موفقیت انجام شد',
                   });
-                  this.loadData({ page_number: 1, page_limit: 10 });
+                  this.loadData(this.pageInfo);
                 }
               });
             }
@@ -195,7 +197,7 @@ export class OperatorPage implements OnInit {
                 position: 'top-right',
                 detail: 'افزودن با موفقیت انجام شد',
               });
-              this.loadData({ page_number: 1, page_limit: 10 });
+              this.loadData(this.pageInfo);
             }
             });
           }
