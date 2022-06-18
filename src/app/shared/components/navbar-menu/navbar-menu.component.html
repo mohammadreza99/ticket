@@ -21,8 +21,7 @@
   </ng-template>
 </p-menubar>
 
-<p-sidebar [blockScroll]="isModalSidebar" [modal]="isModalSidebar" [showCloseIcon]="false" [position]="'right'"
-  [transitionOptions]="'200ms'" [visible]="sidebarVisible" (visibleChange)="toggleSidebar($event)">
+<div class="sidebar" [class.visible]="sidebarVisible">
   <div class="d-flex align-items-center justify-content-between py-3 mb-3 sticky-top section-top">
     <i #sidebarIcon class=" rounded-circle p-2 pi pi-angle-double-right sidebarToggleIcon"
       (click)="handleSidebarLockToggler()"></i>
@@ -30,14 +29,13 @@
   </div>
   <p-panelMenu [class]="activeMenu==sidebarItem.id?'active-menu':''" *ngFor="let sidebarItem of sidebarItems"
     (click)="onMenuItemClick($event, sidebarItem)" [multiple]="false" [model]="[sidebarItem]"></p-panelMenu>
-
   <!-- <p-panelMenu [multiple]="false" [model]="sidebarItems"></p-panelMenu> -->
-</p-sidebar>
+</div>
 
-<div *ngIf="fixedIconsActive" class="position-absolute panelMenuIcons" (mouseenter)="onPanelMenuIconsHover($event)">
+<!-- <div *ngIf="fixedIconsActive" class="position-absolute panelMenuIcons" (mouseenter)="onPanelMenuIconsHover($event)">
   <div class="" *ngFor="let icon of sidebarItems">
     <i [class]="icon.icon"></i>
   </div>
-</div>
+</div> -->
 
 <p-menu #accountMenu [baseZIndex]="1000" [popup]="true" [model]="accountItems"></p-menu>
