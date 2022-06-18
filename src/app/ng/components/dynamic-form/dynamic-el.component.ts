@@ -46,6 +46,7 @@ export class DynamicElComponent implements OnInit, ControlValueAccessor {
     cmpRef.instance.ngControl = this.ngControl;
     this.ngControl.valueAccessor = cmpRef.instance;
     cmpRef.instance.errors = {required: 'req'};
+
   }
 
   registerOnChange(fn: any): void {

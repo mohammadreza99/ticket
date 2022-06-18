@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from '@core/http';
 import {Observable} from 'rxjs';
-import {FilterConfig} from "@core/models/apis";
+import {FilterConfig, ResponseConfig} from "@core/models/apis";
 import {FAQ} from "@modules/main/faq/faq";
 
 
@@ -14,16 +14,16 @@ export class FAQService extends ApiService {
     super();
   }
 
-  getFAQs(filter: FilterConfig, category_id: number): Observable<any> {
+  getFAQs(filter: FilterConfig): Observable<ResponseConfig> {
     return this._post(``,
       {
         method: 'getFAQs',
-        data: {...filter, category_id},
+        data: {...filter},
       }
     );
   }
 
-  addFAQ(data: FAQ): Observable<any> {
+  addFAQ(data: FAQ): Observable<ResponseConfig> {
     return this._post(``,
       {
         method: 'addFAQ',
@@ -32,7 +32,7 @@ export class FAQService extends ApiService {
     );
   }
 
-  editFAQ(data: FAQ): Observable<any> {
+  editFAQ(data: FAQ): Observable<ResponseConfig> {
     return this._post(``,
       {
         method: 'editFAQ',
@@ -41,7 +41,7 @@ export class FAQService extends ApiService {
     );
   }
 
-  removeFAQ(faq_id: number): Observable<any> {
+  removeFAQ(faq_id: number): Observable<ResponseConfig> {
     return this._post(``,
       {
         method: 'removeFAQ',

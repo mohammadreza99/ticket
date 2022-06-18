@@ -69,6 +69,7 @@ export class DialogFormComponent implements OnInit {
     if (this.formOptions.formValidator) {
       this.form.setValidators(this.formOptions.formValidator.validatorFn);
     }
+    
   }
 
   handleRules(config: NgDialogFormConfig, value: any) {

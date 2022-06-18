@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from '@core/http';
 import {Observable} from 'rxjs';
-import {FilterConfig} from "@core/models/apis";
+import {FilterConfig, ResponseConfig} from "@core/models/apis";
 import {TicketStatus} from "@modules/main/ticket/ticket";
 
 @Injectable({
@@ -13,7 +13,7 @@ export class TicketService extends ApiService {
     super();
   }
 
-  getTickets(filter: FilterConfig, username: string, status: TicketStatus): Observable<any> {
+  getTickets(filter: FilterConfig, username: string, status: TicketStatus): Observable<ResponseConfig> {
     return this._post(``,
       {
         method: 'getTickets',
@@ -22,7 +22,7 @@ export class TicketService extends ApiService {
     );
   }
 
-  answerTicket(ticket_id: number, answer: string, close_ticket: boolean): Observable<any> {
+  answerTicket(ticket_id: number, answer: string, close_ticket: boolean): Observable<ResponseConfig> {
     return this._post(``,
       {
         method: 'answerTicket',
@@ -31,7 +31,7 @@ export class TicketService extends ApiService {
     );
   }
 
-  closeTicket(ticket_id: number): Observable<any> {
+  closeTicket(ticket_id: number): Observable<ResponseConfig> {
     return this._post(``,
       {
         method: 'closeTicket',
@@ -40,7 +40,7 @@ export class TicketService extends ApiService {
     );
   }
 
-  getTicketConversations(filter: FilterConfig, ticket_id: number): Observable<any> {
+  getTicketConversations(filter: FilterConfig, ticket_id: number): Observable<ResponseConfig> {
     return this._post(``,
       {
         method: 'getTicketConversations',

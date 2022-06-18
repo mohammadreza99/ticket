@@ -2,6 +2,7 @@ export interface FilterConfig {
   page_number?: number;
   page_limit?: number;
   search_text?: string;
+  filter?: object;
 }
 export interface ResponseConfig {
   data?: any;

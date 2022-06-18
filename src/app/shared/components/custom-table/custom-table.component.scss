@@ -6,6 +6,15 @@
   //
   direction: rtl;
 
+  .chips {
+    margin:5px;
+    color: #009ef7;
+    background-color: #f1faff;
+    padding: 0.325rem 0.5rem 0;
+    line-height: 1;
+    border-radius: 0.325rem;
+  }
+
   .p-datatable {
     padding: 0 20px;
     background-color: #fff;
@@ -47,8 +56,13 @@
 
   tbody {
     >tr {
-      &:hover{
-        background-color: unset!important;
+      &:hover {
+        background-color: unset !important;
+      }
+      td{
+        max-width: 500px;
+        overflow: hidden;
+        padding-left: 20px;
       }
       td:first-child {
         direction: ltr;
@@ -65,9 +79,11 @@
       justify-content: center;
       color: #a1a5b7;
       border-radius: 0.325rem;
-      &:hover{
+
+      &:hover {
         color: #009ef7;
       }
+
       // }
     }
   }

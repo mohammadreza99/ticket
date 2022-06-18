@@ -49,6 +49,7 @@ export class DynamicDialogComponent implements AfterViewInit, OnDestroy {
     const viewContainerRef = this.insertionPoint;
     viewContainerRef.clear();
     this.componentRef = viewContainerRef.createComponent(componentFactory);
+    
   }
 
   ngOnDestroy() {

@@ -1,6 +1,15 @@
-<ng-custom-table
-[rowData]="data"
-[config]="config"
-captionText="پرسش و پاسخ"
-captionIcon="pi pi-building"
-></ng-custom-table>
+<div class="container-fluid">
+    <div class="row d-flex justify-content-center">
+        <div class="col-11 pt-5">
+            <ng-custom-table  
+            [rowData]="FAQ"
+            [config]="config" 
+            [enableSearch]="true" 
+            [enableFilter]="true" 
+            captionText="پرسش و پاسخ"
+            ></ng-custom-table>
+        </div>
+    </div>
+  </div>
+  
+  

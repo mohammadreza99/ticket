@@ -30,7 +30,7 @@ export class CustomTableComponent implements OnInit {
   @Input() enableSearch: boolean = false;
   @Input() enableAdd: boolean = true;
   @Input() enableReload: boolean = true;
-  @Input() enableFilter: boolean = true;
+  @Input() enableFilter: boolean = false;
   @Input() hasIndex: boolean = false;
   @Input() selection: any;
   @Input() first: number = 0;
@@ -51,15 +51,19 @@ export class CustomTableComponent implements OnInit {
   rowsPerPageOptions = [10, 20, 30, 50, 100]
 
   ngOnInit(): void {
-    this.rowsPerPageOptions = [10, 20, 30, 50, 100, this.config.total];
-
     this.pageInfo = {
       startIndex: this.first / this.rows, pageSize: this.rows
     };
   }
 
+  async onSwitchChange(args , col){
+    await this.config.onColActionClick({
+      action: 'onSwitchChange',
+      col: col,
+    });
+  }
   getItemName(value, col) {
-    return col?.options.find((item) => item?.value == value);
+    return col?.options.find((item) => item[col.optionValue] == value[col.optionValue]);
   }
 
   async onColActionClick(action, col) {
@@ -167,8 +171,6 @@ export class CustomTableComponent implements OnInit {
   }
 
   onRowClick(item) {
-    console.log(item?.id == this.activeRow?.id);
-
     this.activeRow = item
   }
 }

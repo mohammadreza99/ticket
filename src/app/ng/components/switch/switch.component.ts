@@ -21,7 +21,7 @@ import {
   NgControl,
   NgModel,
 } from '@angular/forms';
-import {NgError, NgLabelPosition} from '@ng/models/forms';
+import { NgError, NgLabelPosition } from '@ng/models/forms';
 
 @Component({
   selector: 'ng-switch',
@@ -36,7 +36,12 @@ import {NgError, NgLabelPosition} from '@ng/models/forms';
   ],
 })
 export class SwitchComponent implements OnInit, ControlValueAccessor {
-  @Input() value: any;
+  // @Input() value: boolean=false;
+  value = false;
+  @Input('value') set _value(value) {
+    if ((value == true || value == 'true')) this.value = true;
+    else  this.value = false;
+  }
   @Input() label: string;
   @Input() labelWidth: number;
   @Input() hint: string;
@@ -59,14 +64,11 @@ export class SwitchComponent implements OnInit, ControlValueAccessor {
   controlContainer: FormGroupDirective;
   ngControl: NgControl;
 
-  constructor(private cd: ChangeDetectorRef, private injector: Injector) {
-  }
+  constructor(private cd: ChangeDetectorRef, private injector: Injector) {}
 
-  onModelChange: any = (_: any) => {
-  };
+  onModelChange: any = (_: any) => {};
 
-  onModelTouched: any = () => {
-  };
+  onModelTouched: any = () => {};
 
   ngOnInit() {
     let parentForm: FormGroup;
@@ -138,10 +140,10 @@ export class SwitchComponent implements OnInit, ControlValueAccessor {
 
   showError(errorType: string): boolean {
     return (
-      this.isInvalid() && this.ngControl.control.hasError(errorType.toLowerCase())
+      this.isInvalid() &&
+      this.ngControl.control.hasError(errorType.toLowerCase())
     );
   }
-
 
   isRequired(control: AbstractControl): boolean {
     let isRequired = false;

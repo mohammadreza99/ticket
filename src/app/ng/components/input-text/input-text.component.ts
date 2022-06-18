@@ -106,11 +106,10 @@ export class InputTextComponent implements OnInit, ControlValueAccessor, AfterVi
         rootForm = this.controlContainer.formDirective as FormGroupDirective;
         // only when we have a formGroup (here is : controlContainer), we also may have formControlName instance.
         // so we check this condition when we have a controlContainer and overwrite currentControl value.
-        console.log('111', currentControl);
+  
         if (this.ngControl instanceof FormControlName) {
           currentControl = parentForm.get(this.ngControl.name.toString());
         }
-        console.log('222', currentControl);
         rootForm.ngSubmit.subscribe(() => {
           if (!this.disabled) {
             currentControl.markAsTouched();

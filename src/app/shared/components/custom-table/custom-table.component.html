@@ -64,15 +64,15 @@
           >
             <i [class]="action.icon"></i>
           </a>
-          <!-- <ng-container *ngIf="enableFilter">
+          <ng-container *ngIf="enableFilter">
             <a
               tooltipPosition="bottom"
               [pTooltip]="'جستجو'"
               (click)="onActionClick('onFilter')"
             >
-              <i class="pi pi-search"></i>
+              <i class="pi pi-filter"></i>
             </a>
-          </ng-container> -->
+          </ng-container>
           <ng-container *ngIf="enableReload">
             <a
               tooltipPosition="bottom"
@@ -282,7 +282,7 @@
         <td *ngFor="let col of config.colDef; let i = index">
           <ng-container [ngSwitch]="col?.type">
             <ng-container *ngSwitchCase="'dropdown'">
-              {{ getItemName(item[col.field], col)?.label }}
+              {{ getItemName(item[col.field], col)[col.optionLabel] }}
             </ng-container>
             <ng-container *ngSwitchCase="'dropdownImg'">
               <img *ngIf="getItemName(item[col.field], col)?.url"
@@ -293,6 +293,13 @@
             </ng-container>
             <ng-container *ngSwitchCase="'time'">
               {{ item[col.field] | jalalitime }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'switch'">
+              <ng-switch
+              [value]="item[col.field]"
+              (onChange)="onSwitchChange($event,item)"
+              >
+              </ng-switch>
             </ng-container>
             <ng-container *ngSwitchDefault>
               <span [innerHTML]="col.templateString
