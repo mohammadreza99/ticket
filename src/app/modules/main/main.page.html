@@ -1,17 +1,10 @@
-<div class="main-content {{getClasses()}}">
-  <ng-navbar-menu
-    [menuType]="menuType"
-    [sidebarVisible]="sidebarVisible"
-    [sidebarLock]="sidebarLock"
-    [sidebarItems]="sidebarItems"
-    (menuTypeChange)="onMenuTypeChange($event)"
-    (sidebarVisibleChange)="onSidebarVisibleChange($event)"
-    (sidebarLockChange)="onSidebarLockChange($event)"
-  ></ng-navbar-menu>
+<div class="main-content" [class.sidebar-open]="sidebarVisible">
+  <ng-navbar-menu [sidebarVisible]="sidebarVisible" [sidebarItems]="sidebarItems"
+    (sidebarVisibleChange)="onSidebarVisibleChange($event)"></ng-navbar-menu>
   <main>
+    <p>{{currentTitle}}</p>
     <router-outlet></router-outlet>
   </main>
 </div>
 <ng-loading></ng-loading>
 <p-scrollTop></p-scrollTop>
-

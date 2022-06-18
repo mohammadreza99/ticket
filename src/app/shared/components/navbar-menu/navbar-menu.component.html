@@ -1,13 +1,8 @@
 <nav class="navbar navbar-expand-sm shadow-sm fixed-top">
-
   <div class="collapse navbar-collapse w-100 p-3">
     <ul class="navbar-nav p-0 mr-auto w-100 justify-content-start ">
-      <!-- <li class="nav-item">
-        <a class="nav-link" routerLink="/auth" routerLinkActive="active" > <i class="fad fa-user-circle fa-2x"></i></a>
-      </li> -->
       <li class="nav-item  ml-3" (click)="accountMenu.toggle($event)">
         <p-avatar icon="fad fa-user" shape="circle"></p-avatar>
-        <!--        <i class="p-2 bg-light pi pi-user"></i>-->
       </li>
     </ul>
   </div>
@@ -15,34 +10,17 @@
     داشبورد فروشگاه
   </div>
 </nav>
-<p-menubar [model]="sidebarItems" *ngIf="menuType == 'horizontal'">
-  <ng-template pTemplate="start">
-    <ng-logo width="50px"></ng-logo>
 
-  </ng-template>
-</p-menubar>
-
-<p-sidebar [blockScroll]="isModalSidebar" [modal]="isModalSidebar" [showCloseIcon]="false" [position]="'right'"
-  [transitionOptions]="'200ms'" [visible]="sidebarVisible" (visibleChange)="toggleSidebar($event)">
-  <div class="d-flex align-items-center justify-content-between py-3 mb-3 sticky-top section-top">
-    <i #sidebarIcon class=" rounded-circle p-2 pi pi-angle-double-right sidebarToggleIcon"
-      (click)="handleSidebarLockToggler()"></i>
-    <div>
-
+<div class="sidebar" [class.visible]="sidebarVisible">
+  <div class="d-flex align-items-center justify-content-between p-3 sticky-top section-top">
+    <i #sidebarIcon class=" rounded-circle p-2 pi pi-angle-double-{{sidebarVisible ? 'right' : 'left'}}"
+      (click)="toggleSidebar()"></i>
+    <div class="d-flex">
       <img class="pr-3" width="70px" src="../../../../assets/images/logo-text.svg">
       <ng-logo width="50px"></ng-logo>
     </div>
   </div>
-  <p-panelMenu [class]="activeMenu==sidebarItem.id?'active-menu':''" *ngFor="let sidebarItem of sidebarItems"
-    (click)="onMenuItemClick($event, sidebarItem)" [multiple]="false" [model]="[sidebarItem]"></p-panelMenu>
-
-  <!-- <p-panelMenu [multiple]="false" [model]="sidebarItems"></p-panelMenu> -->
-</p-sidebar>
-
-<!-- <div *ngIf="fixedIconsActive" class="position-absolute panelMenuIcons" (mouseenter)="onPanelMenuIconsHover($event)">
-  <div class="" *ngFor="let icon of sidebarItems">
-    <i [class]="icon.icon"></i>
-  </div>
-</div> -->
+  <p-panelMenu *ngFor="let sidebarItem of sidebarItems" [multiple]="false" [model]="[sidebarItem]"></p-panelMenu>
+</div>
 
 <p-menu #accountMenu [baseZIndex]="1000" [popup]="true" [model]="accountItems"></p-menu>

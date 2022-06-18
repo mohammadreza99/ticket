@@ -1,3 +1,5 @@
+@import "variable";
+
 :host ::ng-deep {
   .main-content {
     display: flex;
@@ -11,136 +13,20 @@
       flex: 1;
     }
 
+    main,
+    nav {
+      margin-right: $sidebar-close-width;
+    }
+
+    &.sidebar-open {
+      main,
+      nav {
+        margin-right: $sidebar-open-width;
+      }
+    }
+
     .p-panelmenu-header-link {
       justify-content: space-between;
     }
-
-    &.menu-overlay, &.menu-overlay-mask {
-      &.sidebar-lock {
-        .pi-times {
-          display: none;
-        }
-
-        &:not(.rtl) {
-          main, nav {
-            margin-left: 20rem;
-          }
-        }
-
-        &.rtl {
-          main, nav {
-            text-align: right;
-            margin-right: 20rem;
-          }
-        }
-      }
-    }
-
-    &.menu-push, &.menu-push-mask {
-      &.sidebar-open {
-        &:not(.rtl) {
-          main, nav {
-            transform: translateX(20rem);
-          }
-        }
-
-        &.rtl {
-          main, nav {
-            transform: translateX(-20rem);
-          }
-        }
-      }
-
-      &.sidebar-lock {
-        &:not(.rtl) {
-          main, nav {
-            transform: translateX(0);
-            margin-left: 20rem;
-          }
-        }
-
-        &.rtl {
-          main, nav {
-            transform: translateX(0);
-            margin-right: 20rem;
-          }
-        }
-      }
-    }
-
-    &.menu-static {
-      &.sidebar-open {
-        &:not(.rtl) {
-          main, nav {
-            margin-left: 20rem;
-          }
-        }
-
-        &.rtl {
-          main, nav {
-            margin-right: 20rem;
-          }
-        }
-      }
-    }
-
-    &.menu-hover {
-      .p-panelmenu-header-link {
-        justify-content: space-between;
-      }
-
-      .p-menuitem-icon {
-        margin: 0 !important;
-      }
-
-      &:not(.rtl) {
-        main, nav {
-          margin-right: 5rem;
-        }
-
-        .p-sidebar {
-          transform: translateX(calc(100% - 5rem));
-
-          &:hover {
-            transform: translateX(0);
-          }
-        }
-      }
-
-      &.rtl {
-        main, nav {
-          margin-right: 5rem;
-        }
-
-        .p-sidebar {
-          transform: translateX(calc(100% - 5rem));
-
-          &:hover {
-            transform: translateX(0);
-          }
-        }
-      }
-
-      &.sidebar-lock {
-        .p-sidebar {
-          transform: translateX(0);
-        }
-
-        &:not(.rtl) {
-          main, nav {
-            margin-left: 20rem;
-          }
-        }
-
-        &.rtl {
-          main, nav {
-            margin-right: 20rem;
-          }
-        }
-      }
-    }
-
-    
-
   }
 }
