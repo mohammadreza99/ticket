@@ -15,7 +15,8 @@ export class AuthService extends ApiService {
     return this._post(``,
       {
         method: 'loginDashboard',
-        data: data
+        data: data,
+        api_version:0
       }
     );
   }

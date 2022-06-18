@@ -63,6 +63,7 @@
         max-width: 500px;
         overflow: hidden;
         padding-left: 20px;
+        text-overflow: ellipsis;
       }
       td:first-child {
         direction: ltr;

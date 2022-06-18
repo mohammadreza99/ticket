@@ -158,6 +158,11 @@
       }
     }
   }
+  p-menu{
+    .menuitem{
+      direction: rtl!important;
+    }
+  }
 }
 
 // .p-menuitem-link {

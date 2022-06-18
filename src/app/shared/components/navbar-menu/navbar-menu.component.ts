@@ -16,14 +16,15 @@ export class NavbarMenuComponent
   accountItems: MenuItem[] = [
     {
       label: 'خروج',
-      icon: 'pi pi-sign-out',
+      icon: 'fad fa-sign-out',
       command: async () => {
         const dialogRes = await this.utilsService.showConfirm(
           {
             header: 'خروج از سایت',
             message: 'آیا برای خروج اطمینان دارید؟',
             acceptLabel: 'بلی',
-            rejectLabel: 'خیر'
+            rejectLabel: 'خیر',
+            rtl:true
           }
         );
         if (dialogRes) {

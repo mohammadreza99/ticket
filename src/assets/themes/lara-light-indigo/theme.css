@@ -2389,7 +2389,7 @@ p-treeselect.ng-invalid.ng-dirty > .p-treeselect {
 .p-datatable .p-datatable-tbody > tr > td {
   text-align: left;
   padding: 1rem 1rem;
-  border-bottom-width: 1px;
+  border-bottom-width: 1px dashed #EFF2F5;
   border-bottom-style: dashed;
   border-bottom-color: #EFF2F5;
 }

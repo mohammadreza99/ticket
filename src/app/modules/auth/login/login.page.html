@@ -26,17 +26,13 @@
             [errors]="{'required':'این فیلد الزامیست.'}"
             [rtl]="true"
           ></ng-input-text>
-          <ng-single-checkbox formControlName="rememberMe" [rtl]="true" label="مرا بخاطر بسپار"></ng-single-checkbox>
           <ng-button-async
             [full]="true"
             type="submit"
             label="ورود"
             (clickAsync)="onSubmit()"
           ></ng-button-async>
-          <small class="text-muted mt-3 text-center">
-            حساب کاربری ندارید؟
-            <a class="text-decoration-none" routerLink="/auth/register"> ثبت نام کنید</a>
-          </small>
+
         </div>
       </form>
     </div>
