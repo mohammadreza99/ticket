@@ -54,7 +54,7 @@ export class MainPage implements OnInit {
   ];
 
   // default route data
-  currentTitle: string = 'bug'
+  currentTitle: string = 'اپراتور های سیستم'
 
   ngOnInit(): void {
     this.router.events.pipe(filter(e => e instanceof ActivationStart)).subscribe((res: any) => {

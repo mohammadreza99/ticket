@@ -63,7 +63,12 @@ export class CustomTableComponent implements OnInit {
     });
   }
   getItemName(value, col) {
+    if(value && !value[col.optionValue] )
+    return col?.options.find((item) => item[col.optionValue]  == value);
+    else  if(value && value[col.optionValue])
     return col?.options.find((item) => item[col.optionValue] == value[col.optionValue]);
+    else return ''
+
   }
 
   async onColActionClick(action, col) {

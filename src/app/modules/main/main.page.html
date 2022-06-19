@@ -1,8 +1,7 @@
 <div class="main-content" [class.sidebar-open]="sidebarVisible">
   <ng-navbar-menu [sidebarVisible]="sidebarVisible" [sidebarItems]="sidebarItems"
-    (sidebarVisibleChange)="onSidebarVisibleChange($event)"></ng-navbar-menu>
+    (sidebarVisibleChange)="onSidebarVisibleChange($event)" [currentTitle]="currentTitle"></ng-navbar-menu>
   <main>
-    <p>{{currentTitle}}</p>
     <router-outlet></router-outlet>
   </main>
 </div>

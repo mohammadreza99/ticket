@@ -14,38 +14,38 @@ const routes: Routes = [
     component: MainPage,
     children: [
       {
+        path: 'operator',
+        component: OperatorPage,
+        data: { title: 'اپراتور های سیستم' }
+      },
+      {
         path: 'bug',
         component: BugPage,
-        data: { title: 'bug' }
+        data: { title: 'باگ' }
       },
       {
         path: 'default-answer',
         component: DefaultAnswerPage,
-        data: { title: 'default-answer' }
+        data: { title: 'پاسخ های پیشفرض' }
       },
       {
         path: 'faq',
         component: FAQPage,
-        data: { title: 'faq' }
+        data: { title: 'سوالات متداول' }
       },
       {
         path: 'faq-category',
         component: FAQCategoryPage,
-        data: { title: 'faq-category' }
-      },
-      {
-        path: 'operator',
-        component: OperatorPage,
-        data: { title: 'operator' }
+        data: { title: 'دسته بندی سوالات متداول' }
       },
       {
         path: 'ticket',
         component: TicketPage,
-        data: { title: 'ticket' }
+        data: { title: 'تیکت های ارسال شده' }
       },
       {
         path: '',
-        redirectTo: 'bug'
+        redirectTo: 'operator'
       }
     ],
   },

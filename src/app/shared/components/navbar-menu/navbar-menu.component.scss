@@ -15,6 +15,7 @@
         cursor: pointer;
       }
     }
+
     .secondary-navbar {
       border-top: 1px solid #eff2f5;
     }
@@ -32,14 +33,21 @@
     white-space: nowrap;
     transition: all 200ms;
 
-    ng-logo {
+    &:hover {
+      width: $sidebar-open-width ;
+      ng-logo ,img {
+        display: block;
+      }
+    }
+
+    ng-logo ,img{
       display: none;
     }
 
     &.visible {
       width: $sidebar-open-width;
 
-      ng-logo {
+      ng-logo ,img{
         display: block;
       }
     }
@@ -47,6 +55,7 @@
     .section-top {
       background-color: #1e1e2d;
       height: 100px;
+
       i {
         cursor: pointer;
 
@@ -60,13 +69,16 @@
       &-header-link {
         flex-direction: row-reverse;
         justify-content: flex-start;
+
         &:focus {
           box-shadow: none;
         }
+
         .p-menuitem {
           &-text {
             color: #6c757d !important;
           }
+
           &-icon {
             margin-right: 0;
             margin-left: 1.25rem;
@@ -74,6 +86,7 @@
             max-width: 20px;
             text-align: center;
           }
+
           &-link-active {
             color: azure !important;
 
@@ -133,9 +146,10 @@
       }
     }
   }
-  p-menu{
-    .menuitem{
-      direction: rtl!important;
+
+  p-menu {
+    .menuitem {
+      direction: rtl !important;
     }
   }
 }

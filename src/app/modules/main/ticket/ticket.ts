@@ -1,18 +1,18 @@
 import {FAQCategoryAbs} from "@modules/main/faq/faq";
 
-export interface Ticket {
-  ticket_id: number,
+export class Ticket {
+  ticket_id: number;
   category: FAQCategoryAbs;
-  ticket_text: string,
-  user: User,
-  answer: string,
-  answer_time: string,
-  user_satisfaction: boolean,
-  status: TicketStatus,
-  last_conversation_text: string,
-  last_conversation_answer: string,
-  last_conversation_time: string,
-  operator: OperatorAbs
+  ticket_text: string;
+  user: User;
+  answer: string;
+  answer_time: string;
+  user_satisfaction: boolean;
+  status: TicketStatus;
+  last_conversation_text: string;
+  last_conversation_answer: string;
+  last_conversation_time: string;
+  operator: OperatorAbs;
 }
 
 export interface User {

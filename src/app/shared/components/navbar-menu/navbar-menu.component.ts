@@ -36,6 +36,7 @@ export class NavbarMenuComponent implements OnInit {
   @Input() sidebarVisible: boolean = false;
   @Output() sidebarVisibleChange = new EventEmitter<boolean>();
   @Input() user: any;
+  @Input() currentTitle: string;
   @Input() sidebarItems: MenuItem[];
 
   constructor(

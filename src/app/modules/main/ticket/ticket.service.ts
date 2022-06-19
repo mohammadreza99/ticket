@@ -13,11 +13,11 @@ export class TicketService extends ApiService {
     super();
   }
 
-  getTickets(filter: FilterConfig, username: string, status: TicketStatus): Observable<ResponseConfig> {
+  getTickets(filter: FilterConfig): Observable<ResponseConfig> {
     return this._post(``,
       {
         method: 'getTickets',
-        data: {...filter, username, status}
+        data: {...filter}
       }
     );
   }

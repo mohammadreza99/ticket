@@ -279,7 +279,7 @@
         <td *ngIf="hasIndex">
           {{ rowIndex + 1 + (+pageInfo.startIndex * +pageInfo.pageSize) }}
         </td>
-        <td *ngFor="let col of config.colDef; let i = index">
+        <td  *ngFor="let col of config.colDef; let i = index">
           <ng-container [ngSwitch]="col?.type">
             <ng-container *ngSwitchCase="'dropdown'">
               {{ getItemName(item[col.field], col)[col.optionLabel] }}
@@ -288,10 +288,10 @@
               <img *ngIf="getItemName(item[col.field], col)?.url"
                    [src]="'../../../../assets/images/'+getItemName(item[col.field], col)?.url">
             </ng-container>
-            <ng-container *ngSwitchCase="'date'">
+            <ng-container  *ngSwitchCase="'date'">
               {{ item[col.field] | jalali }}
             </ng-container>
-            <ng-container *ngSwitchCase="'time'">
+            <ng-container  *ngSwitchCase="'time'">
               {{ item[col.field] | jalalitime }}
             </ng-container>
             <ng-container *ngSwitchCase="'switch'">
@@ -301,7 +301,7 @@
               >
               </ng-switch>
             </ng-container>
-            <ng-container *ngSwitchDefault>
+            <ng-container  *ngSwitchDefault>
               <span [innerHTML]="col.templateString
                 ? col.templateString(item)
                 : col.subField
@@ -312,7 +312,7 @@
             </ng-container>
           </ng-container>
         </td>
-        <td *ngFor="let action of config?.actionConfig">
+        <td  *ngFor="let action of config?.actionConfig">
           <a
             *ngIf="action.routerLink"
             [routerLink]="
