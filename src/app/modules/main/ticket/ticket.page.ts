@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { TableConfig } from '@core/models';
 import { FilterConfig } from '@core/models/apis';
 import { NgDialogFormConfig, NgDialogFormInputTypes } from '@ng/models/overlay';
@@ -7,12 +7,13 @@ import { FAQCategoryService } from '../faq-category/faq-category.service';
 import { FAQService } from '../faq/faq.service';
 import { Operator } from '../operator/operator';
 import { OperatorService } from '../operator/operator.service';
-import { Ticket } from './ticket';
+import { Conversation, Ticket } from './ticket';
 import { TicketService } from './ticket.service';
 
 @Component({
   selector: 'ng-ticket',
-  templateUrl: './ticket.page.html'
+  templateUrl: './ticket.page.html',
+  styleUrls: ['./ticket.page.scss']
 })
 export class TicketPage implements OnInit {
   constructor(
@@ -20,11 +21,14 @@ export class TicketPage implements OnInit {
     private _FAQCategoryService: FAQCategoryService,
     private utilsService: UtilsService,
     private operatorService: OperatorService,
+    private cdr: ChangeDetectorRef
   ) { }
   FAQCategories = [];
   allOperators: Operator[];
   pageInfo = { page_number: 1, page_limit: 10 };
   filter = {};
+  activeTabIndex = 0;
+  gettingConversation = false;
   async ngOnInit() {
     this.FAQCategories = (
       await this._FAQCategoryService
@@ -129,20 +133,25 @@ export class TicketPage implements OnInit {
     ];
     this.loadData(this.pageInfo);
   }
-
+  ticketConversations = [];
   ticket: Ticket[] = [];
   config: TableConfig = {
     colDef: [],
     actionConfig: [
       {
-        header: 'ویرایش',
-        field: 'onEdit',
-        icon: 'fad fa-pencil',
+        header: 'مکالمه',
+        field: 'onConversation',
+        icon: 'fad fa-comments',
       },
       {
-        header: 'حذف',
-        field: 'onDelete',
-        icon: 'fad fa-trash',
+        header: 'پاسخ',
+        field: 'onAnswer',
+        icon: 'fad fa-comment',
+      },
+      {
+        header: 'بستن',
+        field: 'onClose',
+        icon: 'fas fa-times',
       },
     ],
     onFilter: (params) => {
@@ -169,10 +178,23 @@ export class TicketPage implements OnInit {
       Object.assign(this.filter, this.pageInfo);
       this.loadData(this.filter);
     },
-    onColActionClick: (params) => {
-
+    onColActionClick: async (params) => {
       if (params.action == 'onDelete') {
-        this.deleteFAQ(params.col.ticket_id);
+        // this.deleteFAQ(params.col.ticket_id);
+      }
+      if (params.action == 'onConversation') {
+        if (!this.ticketConversations.find(item => item.ticket_id == params.col.ticket_id)) {
+          let ticketConversations = await (await this.ticketService.getTicketConversations({ page_number: 1, page_limit: 50, ticket_id: params.col.ticket_id }).toPromise()).data.conversations;
+          Object.assign(params.col, { ticketConversations: ticketConversations })
+          this.ticketConversations.push(params.col);
+          setTimeout(() => {
+
+            this.activeTabIndex = this.ticketConversations.length;
+          }, 10);
+          console.log(this.activeTabIndex);
+
+        }
+
       }
     },
     onSearch: (params) => {
@@ -184,8 +206,6 @@ export class TicketPage implements OnInit {
   };
 
   async loadData(filter?: FilterConfig) {
-    console.log(filter);
-
     let data = (await this.ticketService.getTickets(filter).toPromise()).data;
     this.config.total = data.total_counts;
     this.ticket = data.tickets;
@@ -214,8 +234,35 @@ export class TicketPage implements OnInit {
         });
     }
   }
+  async openConversation(conversation) {
+    if (!this.ticketConversations.find(item => item.ticket_id == conversation.ticket_id)) {
+      this.gettingConversation = true;
+      let ticketConversations = await (await this.ticketService.getTicketConversations({ page_number: 1, page_limit: 50, ticket_id: conversation.ticket_id }).toPromise()).data.conversations;
+      Object.assign(conversation, { ticketConversations: ticketConversations })
+      this.ticketConversations.push(conversation);
+      setTimeout(() => {
+        this.activeTabIndex = this.ticketConversations.length - 1;
+        this.gettingConversation = false;
+      }, 10);
+    }
+    else {
+      let index = this.ticketConversations.findIndex(item => item.ticket_id == conversation.ticket_id);
+      setTimeout(() => {
+        this.activeTabIndex = index;
+      }, 10);
+    }
+  }
+
+  closeConvesation(tab) {
+    this.ticketConversations.splice(tab.index, 1);
+    setTimeout(() => {
+      this.activeTabIndex = this.ticketConversations.length - 1;
+    }, 10);
+  }
+  onAnsweredTicket(ticket_id) {
+    let index = this.ticketConversations.findIndex(item => item.ticket_id == ticket_id);
+    this.closeConvesation({index:index})
+  }
 }
 
-// status: "AdminWaiting"
-// username: "params"
-// operator_id: "5ef73002dd2bd03a5061ed44"
+

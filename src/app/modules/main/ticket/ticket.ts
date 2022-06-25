@@ -27,5 +27,11 @@ export interface OperatorAbs {
   name: string,
   username: string
 }
+export interface Conversation {
+  conversation_answer: string,
+  conversation_id: string,
+  conversation_text: string,
+  create_time: number
+}
 
 export type TicketStatus = 'UserWaiting' | 'AdminWaiting' | 'Closed'

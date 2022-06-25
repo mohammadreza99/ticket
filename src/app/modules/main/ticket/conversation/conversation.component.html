@@ -1,0 +1,39 @@
+<div class="row d-flex flex-column justify-content-between">
+    <div class="col-12 mt-4">
+        <ng-container *ngFor="let conversation of conversations">
+            <div *ngIf="conversation.conversation_text" class="pm d-flex flex-column mt-1">
+                <div class="d-flex align-items-center mb-1 w-100">
+                    <span class="user-avatar">
+                        {{user.username[0]}}
+                    </span>
+                    <span class="title mx-2">{{user.first_name}} {{user.last_name}}</span>
+                    <span class="time">{{+(conversation.create_time + '000') | jalalitime}}</span>
+                </div>
+                <div class="user-pm  p-3 text-right">
+                    {{conversation.conversation_text}}
+                </div>
+            </div>
+            <div *ngIf="conversation.conversation_answer" class="pm d-flex flex-column align-items-end w-100 pb-4">
+                <div class="d-flex align-items-center mb-1">
+                    <span class="title ml-2">{{operator.name}}</span>
+                    <span class="operator-avatar"> {{operator.username[0]}}</span>
+                </div>
+                <div class="operator-pm p-3 text-right">
+                    {{conversation.conversation_answer}}
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <div class="w-100 mt-4 border-top">
+        <ng-dropdown placeholder="انتخاب پاسخ پیش فرض" [rtl]="true" [options]="defaultAnswers" [optionLabel]="'title'"
+            [optionValue]="'default_answer_id'" (onChange)="selectDefultAnswer($event)"></ng-dropdown>
+        <ng-input-textarea class="w-100" placeholder="پاسخ" [rtl]="true" [(ngModel)]="answer"></ng-input-textarea>
+        <div>
+        </div>
+        <div class="w-100 d-flex justify-content-between mt-3 align-items-center">
+            <ng-switch [rtl]="true" [labelPos]="'right'" [label]="'بستن تیکت'" [(ngModel)]="closed">
+            </ng-switch>
+            <ng-button (click)="sendAnswer()" [label]="'ارسال'"></ng-button>
+        </div>
+    </div>
+</div>

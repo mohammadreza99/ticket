@@ -161,6 +161,8 @@ export class SwitchComponent implements OnInit, ControlValueAccessor {
   }
 
   writeValue(value: any) {
+    console.log(value);
+    
     this.value = value;
     this.cd.markForCheck();
   }

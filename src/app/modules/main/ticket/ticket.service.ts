@@ -40,11 +40,11 @@ export class TicketService extends ApiService {
     );
   }
 
-  getTicketConversations(filter: FilterConfig, ticket_id: number): Observable<ResponseConfig> {
+  getTicketConversations(filter): Observable<ResponseConfig> {
     return this._post(``,
       {
         method: 'getTicketConversations',
-        data: {...filter, ticket_id}
+        data: {...filter}
       }
     );
   }

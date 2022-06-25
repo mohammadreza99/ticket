@@ -1,0 +1,74 @@
+.pm {
+
+    .title {
+        font-size: 1.15rem !important;
+        font-weight: 600 !important;
+        color: #181c32 !important;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    .time {
+        color: #a1a5b7 !important;
+        font-size: .95rem !important;
+    }
+
+    .user-pm {
+        background-color: #f8f5ff !important;
+        border-radius: 0.475rem !important;
+        color: #181c32 !important;
+        font-size: 13px !important;
+        width: 450px;
+    }
+
+    .operator-pm {
+        background-color: #f1faff !important;
+        border-radius: 0.475rem !important;
+        color: #181c32 !important;
+        font-size: 13px !important;
+        width: 450px;
+    }
+
+    .operator-avatar,
+    .user-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .user-avatar {
+        background-color: #fff5f8 !important;
+        color: #f1416c !important;
+    }
+
+    .operator-avatar {
+        background-color: #fff8dd !important;
+        color: #ffc700 !important;
+    }
+
+}
+
+ng-input-textarea::ng-deep {
+    textarea {
+        background-color: #fff !important;
+        // border: none
+    }
+}
+
+ng-dropdown::ng-deep {
+
+    .p-dropdown,
+    .p-dropdown-label.p-placeholder,
+    .p-inputtext {
+        background-color: #fff !important;
+        // border: none
+    }
+}
+ng-switch::ng-deep {
+    label{
+        margin-left: 10px!important;
+    }
+}

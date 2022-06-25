@@ -104,14 +104,14 @@
           {{ item.header }}
           <p-sortIcon *ngIf="item.sortabled" [field]="item.field"></p-sortIcon>
         </th>
-        <th *ngFor="let item of config?.actionConfig">
+        <th pFrozenColumn *ngFor="let item of config?.actionConfig">
           {{ item.header }}
         </th>
       </tr>
       <tr>
         <th *ngIf="enableSelection"></th>
         <th *ngIf="hasIndex"></th>
-        <th *ngFor="let col of config?.colDef">
+        <th  *ngFor="let col of config?.colDef">
           <ng-container
             *ngIf="col.filterOption"
             [ngSwitch]="
@@ -267,7 +267,7 @@
             </p-columnFilter>
           </ng-container>
         </th>
-        <th *ngFor="let item of config?.actionConfig"></th>
+        <th  *ngFor="let item of config?.actionConfig"></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">

@@ -1,0 +1,104 @@
+.ticket-box {
+  background-color: #fff;
+  border: 0;
+  box-shadow: 0 0 20px 0 rgba(76, 87, 125, .02);
+  border-radius: 0.625rem;
+  color: #181c32 !important;
+
+  .title {
+    font-weight: 600 !important;
+    font-size: 1.075rem !important;
+  }
+
+  .date {
+    color: #b5b5c3 !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+  }
+
+  .content {
+    font-size: 13px !important;
+    font-weight: 400 !important;
+  }
+
+  .category {
+    color: #7e8299;
+    background-color: #f5f8fa;
+
+  }
+
+  .actions {
+    i {
+      color: #a1a5b7;
+
+      &:hover {
+        color: #009ef7;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .operator {
+    font-size: 1.1rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #5e6278;
+  }
+
+  i.fa-frown {
+    color: #f1416c;
+  }
+
+  i.fa-smile-beam {
+    color: #50cd89;
+  }
+}
+
+p-tabView {
+
+  height: 100%;
+  background-color: #fff;
+
+  ::ng-deep {
+    .p-tabview-close {
+      margin-right: 10px;
+    }
+
+    .p-tabview {
+      height: 100%;
+      overflow-x: hidden;
+      background-color: #fff;
+      border-radius: 0.625rem;
+
+      .p-tabview-panels {
+        height: calc(100% - 60px);
+        background-color: #fff;
+
+        p-tabpanel {
+          height: 100%;
+          background-color: #fff;
+        }
+      }
+    }
+  }
+}
+
+.empity-conversation {
+  background-color: #fff;
+  border-radius: 0.625rem;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.ticket-conversations {
+  height: calc(100vh - 160px);
+  top: 130px;
+  position: sticky;
+}
+
+ng-loading::ng-deep div {
+  position: static !important;
+  height: 100%!important;
+  border-radius: inherit;
+}

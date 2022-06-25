@@ -5,11 +5,12 @@ import * as moment from "jalali-moment";
     name: 'jalalitime'
 })
 export class JalaliTimePipe implements PipeTransform {
-    transform(value: any, args: string = 'YYYY/M/D HH:mm:ss'): any {
+    
+    transform(value: any, args: string = 'jYYYY/jM/jD HH:mm:ss'): any {
         if (value == null) {
             return null;
         }
-        const MomentDate = moment(value);
+        const MomentDate = moment(new Date(value));
         return MomentDate.locale('fa').format(args);
     }
 }

@@ -1,8 +1,8 @@
 input,
-.p-dropdown ,
-.p-multiselect ,
+.p-dropdown,
+.p-multiselect,
 .p-chips,
-.p-inputtext{
+.p-inputtext {
     background-color: #f5f8fa !important;
     border-color: #f5f8fa !important;
     color: #5e6278 !important;
@@ -24,4 +24,42 @@ form label {
     color: #fff !important;
     border-color: #f1416c !important;
     background-color: #f1416c !important;
+}
+
+.badge {
+    padding: 0.5rem 0.65rem;
+    font-size: .85rem;
+    font-weight: 600;
+    line-height: 1;
+    text-align: center;
+    border-radius: 0.325rem;
+    display: inline-block;
+    height: fit-content;
+
+    &.danger-badge {
+        color: #f1416c;
+        background-color: #fff5f8;
+    }
+
+    &.success-badge {
+        color: #50cd89;
+        background-color: #e8fff3;
+    }
+
+    &.warning-badge {
+        color: #ffc700;
+        background-color: #fff8dd;
+    }
+
+    &.primary-badge {
+        color: #009ef7;
+        background-color: #f1faff;
+    }
+
+}
+
+p-tabView {
+    .p-tabview-nav-content {
+        border-radius: 0.625rem 0.625rem 0 0;
+    }
 }
