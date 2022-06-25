@@ -40,7 +40,7 @@ export class SwitchComponent implements OnInit, ControlValueAccessor {
   value = false;
   @Input('value') set _value(value) {
     if ((value == true || value == 'true')) this.value = true;
-    else  this.value = false;
+    else this.value = false;
   }
   @Input() label: string;
   @Input() labelWidth: number;
@@ -64,11 +64,11 @@ export class SwitchComponent implements OnInit, ControlValueAccessor {
   controlContainer: FormGroupDirective;
   ngControl: NgControl;
 
-  constructor(private cd: ChangeDetectorRef, private injector: Injector) {}
+  constructor(private cd: ChangeDetectorRef, private injector: Injector) { }
 
-  onModelChange: any = (_: any) => {};
+  onModelChange: any = (_: any) => { };
 
-  onModelTouched: any = () => {};
+  onModelTouched: any = () => { };
 
   ngOnInit() {
     let parentForm: FormGroup;
@@ -110,13 +110,29 @@ export class SwitchComponent implements OnInit, ControlValueAccessor {
   _onChange(event) {
     let parentForm: FormGroup;
     let currentControl: AbstractControl;
-    if (this.controlContainer && this.ngControl) {
+    // if (this.controlContainer && this.ngControl) {
+    //   parentForm = this.controlContainer.control;
+    //   if (this.ngControl instanceof NgModel) {
+    //     currentControl = this.ngControl.control;
+    //   } else if (this.ngControl instanceof FormControlName) {
+    //     currentControl = parentForm.get(this.ngControl.name.toString());
+    //   }
+    //   if (this.isRequired(currentControl)) {
+    //     this.onModelChange(event.checked ? true : null);
+    //   } else {
+    //     this.onModelChange(event.checked);
+    //   }
+    // }
+    if (this.controlContainer) {
       parentForm = this.controlContainer.control;
       if (this.ngControl instanceof NgModel) {
         currentControl = this.ngControl.control;
       } else if (this.ngControl instanceof FormControlName) {
         currentControl = parentForm.get(this.ngControl.name.toString());
       }
+    }
+    if (this.ngControl) {
+      currentControl = this.ngControl.control;
       if (this.isRequired(currentControl)) {
         this.onModelChange(event.checked ? true : null);
       } else {
@@ -162,7 +178,7 @@ export class SwitchComponent implements OnInit, ControlValueAccessor {
 
   writeValue(value: any) {
     console.log(value);
-    
+
     this.value = value;
     this.cd.markForCheck();
   }
