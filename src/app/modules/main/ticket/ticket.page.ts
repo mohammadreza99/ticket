@@ -266,3 +266,9 @@ export class TicketPage implements OnInit {
 }
 
 
+// const dialogRes = await this.utilsService.showConfirm({
+//   header: 'حذف ',
+//   message: 'آیا از حذف این دسته بندی مطمئن هستید؟',
+//   rtl: true
+// });
+// if (dialogRes) {}
