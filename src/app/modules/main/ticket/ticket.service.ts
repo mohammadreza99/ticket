@@ -31,7 +31,7 @@ export class TicketService extends ApiService {
     );
   }
 
-  closeTicket(ticket_id: number): Observable<ResponseConfig> {
+  closeTicket(ticket_id: string): Observable<ResponseConfig> {
     return this._post(``,
       {
         method: 'closeTicket',

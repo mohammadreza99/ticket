@@ -22,13 +22,21 @@
 
 
 <div class="container-fluid">
-  <div class="row d-flex ">
-    <div class="col-12 col-md-5 pt-5 ticket-conversations">
-      <ng-loading *ngIf="gettingConversation" [static]="true"></ng-loading>
-      <div class="empity-conversation text-center" *ngIf="ticketConversations.length==0">
+  <div class="row d-flex position-relative">
+    <div class="filterBox d-flex align-items-center">
+      <div class="col-3">
+        <ng-dropdown [placeholder]="'وضعیت'" [rtl]="true"></ng-dropdown>
+      </div>
+    </div>
+    <div class="col-12 col-md-5 ticket-conversations">
+      <div class="conversationLoading" *ngIf="gettingConversation">
+
+        <ng-loading  [static]="true"></ng-loading>
+      </div>
+      <div  class="empity-conversation text-center" *ngIf="ticketConversations.length==0 && !gettingConversation">
         <img class="h-100" src="../../../../assets/images/5.png">
       </div>
-      <ng-container *ngIf="ticketConversations.length!=0">
+      <ng-container *ngIf="ticketConversations.length!=0 && !gettingConversation">
         <p-tabView (onClose)="closeConvesation($event)" [(activeIndex)]="activeTabIndex" dir="rtl">
           <p-tabPanel *ngFor="let item of ticketConversations" [header]="item.user.username" [closable]="true">
             <ng-conversation [ticketConversation]="item" (answeredTicket)="onAnsweredTicket($event)">
@@ -38,7 +46,7 @@
       </ng-container>
 
     </div>
-    <div class="col-12 col-md-7 pt-5">
+    <div class="col-12 col-md-7 ">
       <ng-container *ngFor="let item of ticket">
 
         <div dir="rtl" class="ticket-box d-flex flex-column p-3 mb-5">
@@ -56,7 +64,7 @@
               <div *ngSwitchCase="'Closed'" class="status badge success-badge">
                 بسته شده
               </div>
-              <div *ngSwitchCase="'UserWaiting'" class="status badge primery-badge">
+              <div *ngSwitchCase="'UserWaiting'" class="status badge primary-badge">
                 در انتظار کاربر
               </div>
               <div *ngSwitchCase="'AdminWaiting'" class="status badge warning-badge">
@@ -81,11 +89,12 @@
             </div>
             <div class="actions">
               <i class="fad fa-comments p-2" (click)="openConversation(item)"></i>
-              <i class="fas fa-times p-2" (click)="closeTicket()"></i>
+              <i class="fas fa-times p-2" (click)="closeTicket(item)"></i>
             </div>
           </div>
         </div>
       </ng-container>
+       <ng-loading  [static]="true"></ng-loading>
     </div>
   </div>
 </div>

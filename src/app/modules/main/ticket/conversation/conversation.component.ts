@@ -36,14 +36,12 @@ export class ConversationComponent implements OnInit {
   answer;
   closed: boolean = false
   selectDefultAnswer(args) {
-    console.log(args.value);
     this.answer = this.defaultAnswers.find(item => item.default_answer_id == args.value).answer;
   }
   sendAnswer() {
-    console.log(this.closed);
-    // this.ticketService.answerTicket(this.ticket_id,this.answer,this.closed).toPromise().then(()=>{
-    //  this.answeredTicket.emit(this.ticket_id)
-    // }
-    // )
+    this.ticketService.answerTicket(this.ticket_id,this.answer,this.closed).toPromise().then(()=>{
+     this.answeredTicket.emit(this.ticket_id)
+    }
+    )
   }
 }

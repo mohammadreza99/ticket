@@ -62,4 +62,8 @@ p-tabView {
     .p-tabview-nav-content {
         border-radius: 0.625rem 0.625rem 0 0;
     }
+    .p-tabview-nav{
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
 }

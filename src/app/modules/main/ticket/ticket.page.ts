@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
 import { TableConfig } from '@core/models';
 import { FilterConfig } from '@core/models/apis';
 import { NgDialogFormConfig, NgDialogFormInputTypes } from '@ng/models/overlay';
@@ -23,6 +23,16 @@ export class TicketPage implements OnInit {
     private operatorService: OperatorService,
     private cdr: ChangeDetectorRef
   ) { }
+  @HostListener("window:scroll", ["$event"])
+  onWindowScroll() {
+    let pos = (document.documentElement.scrollTop || document.body.scrollTop) + document.documentElement.offsetHeight;
+    let max = document.documentElement.scrollHeight;
+    if (Math.floor(pos) == max) {
+      this.pageInfo = { page_number: this.pageInfo.page_number + 1, page_limit: 10 }
+      Object.assign(this.filter, this.pageInfo);
+      this.loadData(this.filter);
+    }
+  }
   FAQCategories = [];
   allOperators: Operator[];
   pageInfo = { page_number: 1, page_limit: 10 };
@@ -43,172 +53,15 @@ export class TicketPage implements OnInit {
         })
         .toPromise()
     ).data.operators;
-    this.config.colDef = [
-      {
-        header: 'متن تیکت',
-        field: 'ticket_text',
-        type: 'text',
-      },
-      {
-        header: 'نام کاربری',
-        field: 'user',
-        type: 'text',
-        subField: 'username',
-        filterOption: {
-          field: 'user'
-        }
-
-      },
-      {
-        header: '	آخرین پیام',
-        field: 'last_conversation_text',
-        type: 'text',
-      },
-      {
-        header: '	زمان پاسخ گویی',
-        field: 'last_conversation_time',
-        type: 'time',
-      },
-      {
-        header: '	دسته',
-        field: 'category',
-        type: 'dropdown',
-        options: this.FAQCategories,
-        optionLabel: 'title',
-        optionValue: 'category_id',
-        filterOption: {
-          field: 'category',
-          optionLabel: 'title',
-          optionValue: 'category_id',
-        },
-      },
-      {
-        header: 'اپراتور',
-        field: 'operator',
-        type: 'dropdown',
-        options: this.allOperators,
-        optionLabel: 'name',
-        optionValue: 'operator_id',
-        filterOption: {
-          field: 'operator',
-          optionLabel: 'name',
-          optionValue: 'operator_id',
-        },
-      },
-      {
-        header: 'وضعیت',
-        field: 'status',
-        type: 'dropdown',
-        options: [
-          {
-            id: 'UserWaiting',
-            name: 'در انتظار کاربر'
-          },
-          {
-            id: 'AdminWaiting',
-            name: 'در انتظار ادمین'
-          },
-          {
-            id: 'Closed',
-            name: 'بسته شده'
-          },
-        ],
-        optionLabel: 'name',
-        optionValue: 'id',
-        filterOption: {
-          field: 'status',
-          optionLabel: 'name',
-          optionValue: 'id',
-        },
-      },
-      {
-        header: 'رضایت کاربر',
-        field: 'user_satisfaction',
-        type: 'text',
-        templateString: (res) => {
-          if (res.user_satisfaction == true) return `بله`;
-          else return 'خیر';
-        },
-      },
-    ];
     this.loadData(this.pageInfo);
   }
   ticketConversations = [];
   ticket: Ticket[] = [];
-  config: TableConfig = {
-    colDef: [],
-    actionConfig: [
-      {
-        header: 'مکالمه',
-        field: 'onConversation',
-        icon: 'fad fa-comments',
-      },
-      {
-        header: 'پاسخ',
-        field: 'onAnswer',
-        icon: 'fad fa-comment',
-      },
-      {
-        header: 'بستن',
-        field: 'onClose',
-        icon: 'fas fa-times',
-      },
-    ],
-    onFilter: (params) => {
-      Object.assign(this.filter, { operator_id: params.operator });
-      Object.assign(this.filter, {
-        filter: {
-          category_id: params.category,
-          status: params.status,
-          username: params.user
-        }
-      });
-      if (!this.filter['filter'].category_id) delete this.filter['filter'].category_id;
-      if (!this.filter['filter'].status) delete this.filter['filter'].status;
-      if (!this.filter['filter'].username) delete this.filter['filter'].username;
-      if (!this.filter['operator_id']) delete this.filter['operator_id'];
-      Object.assign(this.filter, this.pageInfo);
-      this.loadData(this.filter);
-    },
-    onFetch: (params) => {
-      this.pageInfo = {
-        page_number: params.startIndex + 1,
-        page_limit: params.pageSize,
-      };
-      Object.assign(this.filter, this.pageInfo);
-      this.loadData(this.filter);
-    },
-    onColActionClick: async (params) => {
-      if (params.action == 'onDelete') {
-        // this.deleteFAQ(params.col.ticket_id);
-      }
-      if (params.action == 'onConversation') {
-        if (!this.ticketConversations.find(item => item.ticket_id == params.col.ticket_id)) {
-          let ticketConversations = await (await this.ticketService.getTicketConversations({ page_number: 1, page_limit: 50, ticket_id: params.col.ticket_id }).toPromise()).data.conversations;
-          Object.assign(params.col, { ticketConversations: ticketConversations })
-          this.ticketConversations.push(params.col);
-          setTimeout(() => {
 
-            this.activeTabIndex = this.ticketConversations.length;
-          }, 10);
-          console.log(this.activeTabIndex);
-
-        }
-
-      }
-    },
-    onSearch: (params) => {
-      this.pageInfo.page_number = 1;
-      Object.assign(this.filter, { search_text: params });
-      Object.assign(this.filter, this.pageInfo);
-      this.loadData(this.filter);
-    },
-  };
 
   async loadData(filter?: FilterConfig) {
     let data = (await this.ticketService.getTickets(filter).toPromise()).data;
-    this.config.total = data.total_counts;
-    this.ticket = data.tickets;
+    this.ticket.push(...data.tickets);
   }
 
   async deleteFAQ(ticket_id) {
@@ -261,14 +114,28 @@ export class TicketPage implements OnInit {
   }
   onAnsweredTicket(ticket_id) {
     let index = this.ticketConversations.findIndex(item => item.ticket_id == ticket_id);
-    this.closeConvesation({index:index})
+    this.closeConvesation({ index: index })
+  }
+  async closeTicket(ticket) {
+    console.log(ticket);
+    const dialogRes = await this.utilsService.showConfirm({
+      header: 'حذف ',
+      message: 'آیا از بستن این تیکت مطمئن هستید؟',
+      rtl: true
+    });
+    if (dialogRes) {
+      this.ticketService.closeTicket(ticket.ticket_id).toPromise().then((result) => {
+        if (result.status == 'OK') {
+          this.utilsService.showToast({
+            severity: 'success',
+            position: 'top-right',
+            detail: 'بستن تیکت با موفقیت انجام شد',
+          });
+
+        }
+      })
+    }
   }
 }
 
 
-// const dialogRes = await this.utilsService.showConfirm({
-//   header: 'حذف ',
-//   message: 'آیا از حذف این دسته بندی مطمئن هستید؟',
-//   rtl: true
-// });
-// if (dialogRes) {}

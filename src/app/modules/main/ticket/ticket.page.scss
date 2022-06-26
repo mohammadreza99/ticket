@@ -92,13 +92,42 @@ p-tabView {
 }
 
 .ticket-conversations {
-  height: calc(100vh - 160px);
-  top: 130px;
+  height: calc(100vh - 210px);
+  top: 200px;
   position: sticky;
 }
 
 ng-loading::ng-deep div {
   position: static !important;
-  height: 100%!important;
+  height: auto !important;
   border-radius: inherit;
+  background-color: transparent !important;
+}
+
+.conversationLoading {
+  background-color: #fff;
+  height: calc(100vh - 200px);
+  border-radius: 0.625rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filterBox {
+  width: 100%;
+  height: 80px;
+  top: 120px;
+  // background-color: red;
+  background-color: #f5f8fa;
+  z-index: 20;
+  position: sticky;
+}
+
+ng-dropdown::ng-deep {
+
+  .p-dropdown,
+  .p-inputtext {
+
+    background-color: #fff !important;
+  }
 }
