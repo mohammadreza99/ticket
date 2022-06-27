@@ -1,42 +1,49 @@
-<!-- 
-<div class="container-fluid">
-  <div class="row d-flex justify-content-center">
-      <div class="col-12 col-md-11 pt-5">
-        <p-tabView [(activeIndex)]="activeTabIndex" dir="rtl">
-          <p-tabPanel [header]="'تیکت ها'">
-            <ng-custom-table
-            [rowData]="ticket"
-            [config]="config"
-            captionText="تیکت"
-            [enableAdd]="false"
-            [enableFilter]="true"
-          ></ng-custom-table>
-          </p-tabPanel>
-          <p-tabPanel *ngFor="let item of ticketConversations" [header]="item.user.username" [closable]="true">
-            <ng-conversation [operator]="item.operator" [user]="item.user" [conversations]="item.ticketConversations"></ng-conversation>
-          </p-tabPanel>
-        </p-tabView>
-      </div>
-  </div>
-</div> -->
+
 
 
 <div class="container-fluid">
   <div class="row d-flex position-relative">
     <div class="filterBox d-flex align-items-center">
       <div class="col-3">
-        <ng-dropdown [placeholder]="'وضعیت'" [rtl]="true"></ng-dropdown>
+        <ng-dropdown 
+        [placeholder]="'وضعیت'" 
+        [rtl]="true"
+        [options]="ticketStatus"
+        ></ng-dropdown>
+      </div>
+      <div class="col-3">
+        <ng-dropdown 
+        [placeholder]="'اپراتور'" 
+        [rtl]="true"
+        [options]="allOperators"
+        [optionValue]="'operator_id'"
+        [optionLabel]="'name'"
+        ></ng-dropdown>
+      </div>
+      <div class="col-3">
+        <ng-dropdown 
+        [placeholder]="'دسته بندی'" 
+        [rtl]="true"
+        [options]="allCategories"
+        [optionValue]="'category_id'"
+        [optionLabel]="'title'"
+        ></ng-dropdown>
+      </div>
+      <div class="col-3">
+        <ng-input-text 
+        [placeholder]="'نام کاربری'" 
+        [rtl]="true"
+        ></ng-input-text>
       </div>
     </div>
     <div class="col-12 col-md-5 ticket-conversations">
       <div class="conversationLoading" *ngIf="gettingConversation">
-
         <ng-loading  [static]="true"></ng-loading>
       </div>
       <div  class="empity-conversation text-center" *ngIf="ticketConversations.length==0 && !gettingConversation">
         <img class="h-100" src="../../../../assets/images/5.png">
       </div>
-      <ng-container *ngIf="ticketConversations.length!=0 && !gettingConversation">
+      <ng-container *ngIf="ticketConversations.length!=0">
         <p-tabView (onClose)="closeConvesation($event)" [(activeIndex)]="activeTabIndex" dir="rtl">
           <p-tabPanel *ngFor="let item of ticketConversations" [header]="item.user.username" [closable]="true">
             <ng-conversation [ticketConversation]="item" (answeredTicket)="onAnsweredTicket($event)">
@@ -49,7 +56,7 @@
     <div class="col-12 col-md-7 ">
       <ng-container *ngFor="let item of ticket">
 
-        <div dir="rtl" class="ticket-box d-flex flex-column p-3 mb-5">
+        <div dir="rtl" class="ticket-box d-flex flex-column p-3 mb-4">
           <div class="d-flex justify-content-between ">
 
             <div class="d-flex flex-column">

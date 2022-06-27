@@ -4,7 +4,7 @@
             <div *ngIf="conversation.conversation_text" class="pm d-flex flex-column mt-1">
                 <div class="d-flex align-items-center mb-1 w-100">
                     <span class="user-avatar">
-                        {{user.username[0]}}
+                        {{user?.username[0]}}
                     </span>
                     <span class="title mx-2">{{user.first_name}} {{user.last_name}}</span>
                     <span class="time">{{+(conversation.create_time + '000') | jalalitime}}</span>
@@ -23,6 +23,10 @@
                 </div>
             </div>
         </ng-container>
+       
+        <div *ngIf="!conversations">
+             <ng-loading   [static]="true"></ng-loading>
+        </div>
     </div>
     <div class="w-100 mt-4 border-top">
         <ng-dropdown placeholder="انتخاب پاسخ پیش فرض" [rtl]="true" [options]="defaultAnswers" [optionLabel]="'title'"

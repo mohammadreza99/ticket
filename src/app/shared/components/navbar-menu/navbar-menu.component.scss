@@ -22,7 +22,7 @@
   }
 
   .sidebar {
-    background-color: #1a1a27;
+    background-color: #1e1e2d;
     width: $sidebar-close-width;
     position: fixed;
     right: 0;
@@ -35,19 +35,23 @@
 
     &:hover {
       width: $sidebar-open-width ;
-      ng-logo ,img {
+
+      ng-logo,
+      img {
         display: block;
       }
     }
 
-    ng-logo ,img{
+    ng-logo,
+    img {
       display: none;
     }
 
     &.visible {
       width: $sidebar-open-width;
 
-      ng-logo ,img{
+      ng-logo,
+      img {
         display: block;
       }
     }
@@ -67,8 +71,25 @@
 
     .p-panelmenu {
       &-header-link {
+        font-size: 13px;
         flex-direction: row-reverse;
         justify-content: flex-start;
+        background-color: #1e1e2d;
+        border: 0;
+
+        &:hover {
+          background-color: #1b1b28 !important;
+
+          .p-menuitem {
+            &-text {
+              color: #fff !important;
+            }
+
+            &-icon {
+              color: #009ef7;
+            }
+          }
+        }
 
         &:focus {
           box-shadow: none;
@@ -76,27 +97,46 @@
 
         .p-menuitem {
           &-text {
-            color: #6c757d !important;
+            color: #9899ac !important;
           }
 
           &-icon {
+            color: #494b74;
             margin-right: 0;
             margin-left: 1.25rem;
             min-width: 20px;
             max-width: 20px;
             text-align: center;
+
           }
 
           &-link-active {
-            color: azure !important;
+            background-color: #1b1b28 !important;
 
-            span {
-              color: azure !important;
+            .p-menuitem {
+              &-text {
+                color: #fff !important;
+              }
+
+              &-icon {
+                color: #009ef7;
+              }
             }
           }
         }
       }
 
+      &-header.p-highlight > a{
+        background-color: #1e1e2d!important;
+        .p-menuitem {
+          &-text {
+            color: #9899ac !important;
+          }
+          &-icon {
+            color:#494b74;
+          }
+        }
+      }
       // &-content {
       //   background-color: transparent !important;
       //   border-color: transparent;
@@ -105,8 +145,8 @@
       // }
 
       .p-panelmenu-header-link {
-        background-color: #1a1a27;
-        border: 0;
+        // background-color: #1a1a27;
+        // border: 0;
 
         //   .p-menuitem-icon {
         //     position: absolute;

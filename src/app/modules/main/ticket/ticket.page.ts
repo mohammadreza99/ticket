@@ -3,6 +3,7 @@ import { TableConfig } from '@core/models';
 import { FilterConfig } from '@core/models/apis';
 import { NgDialogFormConfig, NgDialogFormInputTypes } from '@ng/models/overlay';
 import { UtilsService } from '@ng/services';
+import { FAQCategory } from '../faq-category/faq-category';
 import { FAQCategoryService } from '../faq-category/faq-category.service';
 import { FAQService } from '../faq/faq.service';
 import { Operator } from '../operator/operator';
@@ -21,6 +22,7 @@ export class TicketPage implements OnInit {
     private _FAQCategoryService: FAQCategoryService,
     private utilsService: UtilsService,
     private operatorService: OperatorService,
+    private categoryService: FAQCategoryService,
     private cdr: ChangeDetectorRef
   ) { }
   @HostListener("window:scroll", ["$event"])
@@ -33,65 +35,45 @@ export class TicketPage implements OnInit {
       this.loadData(this.filter);
     }
   }
-  FAQCategories = [];
   allOperators: Operator[];
+  allCategories: FAQCategory[];
   pageInfo = { page_number: 1, page_limit: 10 };
   filter = {};
   activeTabIndex = 0;
   gettingConversation = false;
-  async ngOnInit() {
-    this.FAQCategories = (
-      await this._FAQCategoryService
-        .getFAQCategories({ page_number: 1, page_limit: 30 })
-        .toPromise()
-    ).data.faq_categories;
-    this.allOperators = (
-      await this.operatorService
-        .getOperators({
-          page_number: 1,
-          page_limit: 100,
-        })
-        .toPromise()
-    ).data.operators;
-    this.loadData(this.pageInfo);
-  }
   ticketConversations = [];
   ticket: Ticket[] = [];
+  ticketStatus = [
+    {
+      value: 'UserWaiting',
+      label: 'در انتظار کاربر'
+    },
+    {
+      value: 'AdminWaiting',
+      label: 'در انتظار ادمین'
+    },
+    {
+      value: 'Closed',
+      label: 'بسته شده'
+    },
+  ];
 
-
+  async ngOnInit() {
+    this.allOperators = (await this.operatorService.getOperators({ page_number: 1,page_limit: 100}).toPromise()).data.operators;
+    this.allCategories = (await this.categoryService.getFAQCategories({ page_number: 1, page_limit: 30 }).toPromise()).data.faq_categories;
+    this.loadData(this.pageInfo);
+  }
   async loadData(filter?: FilterConfig) {
     let data = (await this.ticketService.getTickets(filter).toPromise()).data;
     this.ticket.push(...data.tickets);
   }
-
-  async deleteFAQ(ticket_id) {
-    const dialogRes = await this.utilsService.showConfirm({
-      header: 'بستن تیکت ',
-      message: 'آیا از بسته شدن این  تیکت مطمئن هستید؟',
-      rtl: true,
-    });
-    if (dialogRes) {
-      await this.ticketService
-        .closeTicket(ticket_id)
-        .toPromise()
-        .then((result) => {
-          if (result.status == 'OK') {
-            this.utilsService.showToast({
-              severity: 'success',
-              position: 'top-right',
-              detail: 'بسته شدن تیکت  با موفقیت انجام شد',
-            });
-            Object.assign(this.filter, this.pageInfo);
-            this.loadData(this.filter);
-          }
-        });
-    }
-  }
   async openConversation(conversation) {
+    console.log(conversation);
+    
     if (!this.ticketConversations.find(item => item.ticket_id == conversation.ticket_id)) {
       this.gettingConversation = true;
-      let ticketConversations = await (await this.ticketService.getTicketConversations({ page_number: 1, page_limit: 50, ticket_id: conversation.ticket_id }).toPromise()).data.conversations;
-      Object.assign(conversation, { ticketConversations: ticketConversations })
+      // let ticketConversations = await (await this.ticketService.getTicketConversations({ page_number: 1, page_limit: 50, ticket_id: conversation.ticket_id }).toPromise()).data.conversations;
+      // Object.assign(conversation, { ticketConversations: ticketConversations })
       this.ticketConversations.push(conversation);
       setTimeout(() => {
         this.activeTabIndex = this.ticketConversations.length - 1;
@@ -105,7 +87,6 @@ export class TicketPage implements OnInit {
       }, 10);
     }
   }
-
   closeConvesation(tab) {
     this.ticketConversations.splice(tab.index, 1);
     setTimeout(() => {

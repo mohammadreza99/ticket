@@ -72,3 +72,9 @@ ng-switch::ng-deep {
         margin-left: 10px!important;
     }
 }
+ng-loading::ng-deep div {
+    position: static !important;
+    height: auto !important;
+    border-radius: inherit;
+    background-color: transparent !important;
+  }

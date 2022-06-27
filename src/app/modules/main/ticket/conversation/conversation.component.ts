@@ -19,12 +19,11 @@ export class ConversationComponent implements OnInit {
     this.defaultAnswers = (await this.defaultAnswerService.getDefaultAnswers({ page_number: 1, page_limit: 50, category_id: this.category_id }).toPromise()).data.default_answers;
   }
   @Input() set ticketConversation(value) {
-    console.log(value);
-    this.category_id = value.category?.category_id
-    this.conversations = value.ticketConversations;
+    this.category_id = value.category?.category_id;
     this.user = value.user;
     this.operator = value.operator;
     this.ticket_id = value.ticket_id;
+    this.getConverstion()
   }
   @Output() answeredTicket = new EventEmitter();
   conversations;
@@ -35,12 +34,18 @@ export class ConversationComponent implements OnInit {
   defaultAnswers: DefaultAnswer[] = [];
   answer;
   closed: boolean = false
+
+  async getConverstion() {
+    this.conversations = await(await this.ticketService.getTicketConversations({ page_number: 1, page_limit: 50, ticket_id: this.ticket_id }).toPromise()).data.conversations;
+ 
+  }
+
   selectDefultAnswer(args) {
     this.answer = this.defaultAnswers.find(item => item.default_answer_id == args.value).answer;
   }
   sendAnswer() {
-    this.ticketService.answerTicket(this.ticket_id,this.answer,this.closed).toPromise().then(()=>{
-     this.answeredTicket.emit(this.ticket_id)
+    this.ticketService.answerTicket(this.ticket_id, this.answer, this.closed).toPromise().then(() => {
+      this.answeredTicket.emit(this.ticket_id)
     }
     )
   }
