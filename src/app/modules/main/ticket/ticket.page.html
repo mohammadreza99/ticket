@@ -1,6 +1,3 @@
-
-
-
 <div class="container-fluid">
   <div class="row d-flex position-relative">
     <div class="filterBox d-flex align-items-center">
@@ -9,6 +6,7 @@
         [placeholder]="'وضعیت'" 
         [rtl]="true"
         [options]="ticketStatus"
+        [(ngModel)]="status"
         ></ng-dropdown>
       </div>
       <div class="col-3">
@@ -18,6 +16,7 @@
         [options]="allOperators"
         [optionValue]="'operator_id'"
         [optionLabel]="'name'"
+        [(ngModel)]="operator"
         ></ng-dropdown>
       </div>
       <div class="col-3">
@@ -27,12 +26,14 @@
         [options]="allCategories"
         [optionValue]="'category_id'"
         [optionLabel]="'title'"
+        [(ngModel)]="category"
         ></ng-dropdown>
       </div>
       <div class="col-3">
         <ng-input-text 
         [placeholder]="'نام کاربری'" 
         [rtl]="true"
+        [(ngModel)]="username"
         ></ng-input-text>
       </div>
     </div>
@@ -41,7 +42,7 @@
         <ng-loading  [static]="true"></ng-loading>
       </div>
       <div  class="empity-conversation text-center" *ngIf="ticketConversations.length==0 && !gettingConversation">
-        <img class="h-100" src="../../../../assets/images/5.png">
+        <img class="w-100" src="../../../../assets/images/5.png">
       </div>
       <ng-container *ngIf="ticketConversations.length!=0">
         <p-tabView (onClose)="closeConvesation($event)" [(activeIndex)]="activeTabIndex" dir="rtl">
@@ -56,7 +57,7 @@
     <div class="col-12 col-md-7 ">
       <ng-container *ngFor="let item of ticket">
 
-        <div dir="rtl" class="ticket-box d-flex flex-column p-3 mb-4">
+        <div dir="rtl" class="w-100 ticket-box d-flex flex-column p-3 mb-4">
           <div class="d-flex justify-content-between ">
 
             <div class="d-flex flex-column">

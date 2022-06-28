@@ -57,6 +57,10 @@ export class TicketPage implements OnInit {
       label: 'بسته شده'
     },
   ];
+  status;
+  operator;
+  category;
+  username;
 
   async ngOnInit() {
     this.allOperators = (await this.operatorService.getOperators({ page_number: 1,page_limit: 100}).toPromise()).data.operators;
