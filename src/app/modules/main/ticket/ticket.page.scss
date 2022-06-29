@@ -124,9 +124,12 @@ ng-loading::ng-deep div {
 }
 
 ng-dropdown::ng-deep , ng-input-text::ng-deep{
-
   .p-dropdown,
   .p-inputtext {
     background-color: #fff !important;
+  }
+  .p-dropdown-clear-icon{
+    left: 3rem;
+    right: unset;
   }
 }

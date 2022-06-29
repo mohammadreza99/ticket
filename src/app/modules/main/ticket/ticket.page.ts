@@ -30,9 +30,11 @@ export class TicketPage implements OnInit {
     let pos = (document.documentElement.scrollTop || document.body.scrollTop) + document.documentElement.offsetHeight;
     let max = document.documentElement.scrollHeight;
     if (Math.floor(pos) == max) {
-      this.pageInfo = { page_number: this.pageInfo.page_number + 1, page_limit: 10 }
-      Object.assign(this.filter, this.pageInfo);
-      this.loadData(this.filter);
+      if (!this.gettingTickets && !this.finishedTickets) {
+        this.pageInfo = { page_number: this.pageInfo.page_number + 1, page_limit: 10 }
+        Object.assign(this.filter, this.pageInfo);
+        this.loadData(this.filter);
+      }
     }
   }
   allOperators: Operator[];
@@ -41,6 +43,8 @@ export class TicketPage implements OnInit {
   filter = {};
   activeTabIndex = 0;
   gettingConversation = false;
+  gettingTickets = false;
+  finishedTickets = false;
   ticketConversations = [];
   ticket: Ticket[] = [];
   ticketStatus = [
@@ -57,23 +61,27 @@ export class TicketPage implements OnInit {
       label: 'بسته شده'
     },
   ];
-  status;
+  status = 'AdminWaiting';
   operator;
   category;
   username;
 
   async ngOnInit() {
-    this.allOperators = (await this.operatorService.getOperators({ page_number: 1,page_limit: 100}).toPromise()).data.operators;
+    this.allOperators = (await this.operatorService.getOperators({ page_number: 1, page_limit: 100 }).toPromise()).data.operators;
     this.allCategories = (await this.categoryService.getFAQCategories({ page_number: 1, page_limit: 30 }).toPromise()).data.faq_categories;
     this.loadData(this.pageInfo);
   }
   async loadData(filter?: FilterConfig) {
+    this.gettingTickets = true;
     let data = (await this.ticketService.getTickets(filter).toPromise()).data;
-    this.ticket.push(...data.tickets);
+    if (data.tickets.length != 0)
+      this.ticket.push(...data.tickets);
+    else this.finishedTickets = true;
+    this.gettingTickets = false;
   }
   async openConversation(conversation) {
     console.log(conversation);
-    
+
     if (!this.ticketConversations.find(item => item.ticket_id == conversation.ticket_id)) {
       this.gettingConversation = true;
       // let ticketConversations = await (await this.ticketService.getTicketConversations({ page_number: 1, page_limit: 50, ticket_id: conversation.ticket_id }).toPromise()).data.conversations;
@@ -120,6 +128,21 @@ export class TicketPage implements OnInit {
         }
       })
     }
+  }
+  onFilter() {
+    setTimeout(() => {
+      let filter = {}
+      this.pageInfo = { page_number: 1, page_limit: 10 };
+      Object.assign(filter, { status: this.status });
+      Object.assign(filter, { category_id: this.category });
+      Object.assign(filter, { username: this.username });
+      Object.assign(this.filter, { operator_id: this.operator });
+      Object.assign(this.filter, { filter: filter });
+      Object.assign(this.filter, this.pageInfo);
+      this.ticket = [];
+      this.finishedTickets = false;
+      this.loadData(this.filter);
+    }, 0);
   }
 }
 

@@ -7,6 +7,8 @@
         [rtl]="true"
         [options]="ticketStatus"
         [(ngModel)]="status"
+        (onChange)="onFilter()"
+        [showClear]="true"
         ></ng-dropdown>
       </div>
       <div class="col-3">
@@ -17,6 +19,8 @@
         [optionValue]="'operator_id'"
         [optionLabel]="'name'"
         [(ngModel)]="operator"
+        (onChange)="onFilter()"
+        [showClear]="true"
         ></ng-dropdown>
       </div>
       <div class="col-3">
@@ -27,6 +31,8 @@
         [optionValue]="'category_id'"
         [optionLabel]="'title'"
         [(ngModel)]="category"
+        (onChange)="onFilter()"
+        [showClear]="true"
         ></ng-dropdown>
       </div>
       <div class="col-3">
@@ -34,6 +40,8 @@
         [placeholder]="'نام کاربری'" 
         [rtl]="true"
         [(ngModel)]="username"
+        (onChange)="onFilter()"
+        [showClear]="true"
         ></ng-input-text>
       </div>
     </div>
@@ -56,7 +64,6 @@
     </div>
     <div class="col-12 col-md-7 ">
       <ng-container *ngFor="let item of ticket">
-
         <div dir="rtl" class="w-100 ticket-box d-flex flex-column p-3 mb-4">
           <div class="d-flex justify-content-between ">
 
@@ -102,7 +109,7 @@
           </div>
         </div>
       </ng-container>
-       <ng-loading  [static]="true"></ng-loading>
+       <ng-loading *ngIf="gettingTickets" [static]="true"></ng-loading>
     </div>
   </div>
 </div>
